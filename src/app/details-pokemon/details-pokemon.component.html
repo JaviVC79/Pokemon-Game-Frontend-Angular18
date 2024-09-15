@@ -1,0 +1,48 @@
+<app-select-pokemon-player-buttons [pokemon]="pokemon" />
+<div class="flex justify-center p-4 w-full mr-4">
+    <div class="rounded-lg shadow-lg bg-white border-4 border-red-400 w-80 h-[32rem] mr-4">
+        <img *ngIf="!isReverse" src={{pokemon.sprites.other.home.front_shiny}}
+            alt={{pokemon.sprites.other.home.front_shiny}} class="w-full object-cover" (click)="clickReverse()" />
+        <img *ngIf="isReverse" src={{pokemon.sprites.back_shiny}} alt={{pokemon.sprites.back_shiny}}
+            class="w-full object-cover" (click)="clickReverse()" />
+        <div class="flex flex-col justify-end items-center cursor-pointer bg-red-400" (click)="clickBack()">
+            <h3 class="text-white text-2xl font-bold m-4">{{pokemon.name.toUpperCase()}}</h3>
+            <p class="text-white text-lg font-bold m-4">Height: {{pokemon.height}}</p>
+            <p class="text-white text-lg font-bold m-4">Weight: {{pokemon.weight}}</p>
+        </div>
+    </div>
+    <div class="flex flex-col justify-center items-center mb-4">
+        <h2 class="text-2xl font-bold m-4" *ngIf="pokemonDetail=='moves'">{{pokemonDetailMoveName?.toUpperCase()}}</h2>
+        <p *ngIf="pokemonDetail=='moves'">{{pokemonDetailMoveEffect}}</p>
+        <div class="relative container grid gap-4 grid-cols-4 m-5 justify-items-center">
+            <h3 [ngClass]="{'pressed': pokemonDetail === 'moves', 'noPressed': pokemonDetail !== 'moves'}"
+                (click)="handlepokemonsDetails('moves')">Moves</h3>
+            <h3 [ngClass]="{'pressed': pokemonDetail === 'stats', 'noPressed': pokemonDetail !== 'stats'}"
+                (click)="handlepokemonsDetails('stats')">Stats</h3>
+            <h3 [ngClass]="{'pressed': pokemonDetail === 'types', 'noPressed': pokemonDetail !== 'types'}"
+                (click)="handlepokemonsDetails('types')">Types</h3>
+            <h3 [ngClass]="{'pressed': pokemonDetail === 'abilities', 'noPressed': pokemonDetail !== 'abilities'}"
+                (click)="handlepokemonsDetails('abilities')">Abilities</h3>
+        </div>
+        <ng-container [ngSwitch]="pokemonDetail">
+            <ng-container *ngSwitchCase="'moves'">
+                <div class="container grid gap-4 grid-cols-6 justify-items-center m-4">
+                    <ul *ngFor="let move of pokemon.moves"
+                        class="rounded bg-red-400 w-full text-center text-white text-sm"
+                        (click)="getAttacksEffects(move.move.url)">
+                        {{move.move.name}}
+                    </ul>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'stats'">
+                <app-stats-pokemon [pokemon]="pokemon" />
+            </ng-container>
+            <ng-container *ngSwitchCase="'types'">
+                <app-types-pokemon [pokemon]="pokemon" />
+            </ng-container>
+            <ng-container *ngSwitchCase="'abilities'">
+                <app-abilities-pokemon [pokemon]="pokemon" />
+            </ng-container>
+        </ng-container>
+    </div>
+</div>

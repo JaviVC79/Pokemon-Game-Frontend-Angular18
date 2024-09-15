@@ -1,0 +1,31 @@
+<ng-container *ngIf="!isClicked">
+  <app-back-forward-buttons (offsetChange)="manejarOffset($event)" (limitChange)="manejarLimit($event)" />
+  <div class="container grid gap-4 grid-cols-3 grid-rows-3 mt-5 justify-items-center">
+    <ng-container *ngFor="let pokemon of pokemons">
+      <div class="relative w-full h-96 perspective">
+        <div
+          class="absolute inset-0 w-80 h-full transition-transform transform-style-preserve-3d duration-700 hover:rotate-y-180">
+          <div
+            class="absolute inset-0 backface-hidden rounded-lg overflow-hidden shadow-lg bg-white border-4 border-red-500">
+            <img src="cardBack.jpg" alt="Front Image" class="w-full h-full object-cover" />
+          </div>
+          <div
+            class="absolute inset-0 backface-hidden rotate-y-180 rounded-lg overflow-hidden shadow-lg bg-white border-4 border-red-500">
+            <img src={{pokemon.sprites.other.home.front_shiny}} alt={{pokemon.sprites.other.home.front_shiny}}
+              class="w-full object-cover" />
+            <div class="absolute inset-0 flex flex-col justify-end items-center mb-4 cursor-pointer bg-red-500 mt-80"
+              (click)="clickCard(pokemon.id)">
+              <h3 class="text-white text-2xl font-bold">{{pokemon.name.toUpperCase()}}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-container>
+<ng-container *ngIf="isClicked">
+  <app-details-pokemon [pokemon]="pokemon" (isClicked)="clickCardBack($event)" />
+</ng-container>
+<ng-container *ngIf="!isClicked">
+  <app-back-forward-buttons (offsetChange)="manejarOffset($event)" (limitChange)="manejarLimit($event)" />
+</ng-container>

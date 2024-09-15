@@ -1,0 +1,11 @@
+<h2>Create User Form</h2>
+<div class="m-10">
+  <form (ngSubmit)="onSubmit()">
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" [(ngModel)]="email">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" [(ngModel)]="name">
+    <button type="submit">Create User</button>
+  </form>
+  <button (click)="traerDatos()">backend</button>
+</div>

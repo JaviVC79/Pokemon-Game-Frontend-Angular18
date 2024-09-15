@@ -1,0 +1,30 @@
+<main class="main">
+
+  <div class="flex justify-between bg-red-300 rounded-lg p-5 w-full">
+    <mat-slide-toggle>Toggle me!</mat-slide-toggle>
+    <nav class="flex justify-between p-4 w-full mr-4">
+      <div>
+        <a mat-fab extended routerLink="/">
+          <mat-icon>home</mat-icon>
+          Home
+        </a>
+      </div>
+      <div>
+        <a mat-fab extended routerLink="/prueba">
+          <mat-icon>pie_chart</mat-icon>
+          Pokemons
+        </a>
+      </div>
+      <div>
+        <a mat-fab extended routerLink="/prueba2">
+          <mat-icon>Formulario</mat-icon>
+          Formulario
+        </a>
+      </div>
+    </nav>
+    <h1>Pokemon App</h1>
+  </div>
+</main>
+
+
+<router-outlet />

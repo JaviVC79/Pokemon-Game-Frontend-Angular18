@@ -1,0 +1,5 @@
+<div class="container grid gap-4 grid-cols-3 justify-items-center m-4">
+    <ul *ngFor="let stat of pokemon.stats" class="rounded bg-red-400 w-full text-center text-white text-sm">
+      {{stat.stat.name}}: {{stat.base_stat}}
+    </ul>
+  </div>

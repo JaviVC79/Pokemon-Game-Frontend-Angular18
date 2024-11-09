@@ -1,0 +1,11 @@
+<div class="m-10 p-4 border rounded shadow-md">
+    <a *ngIf="!isLogin">You need are logged in to create a new team</a>
+    <form *ngIf="isLogin" (ngSubmit)="onSubmit()" class="flex flex-col gap-2 max-w-sm mx-auto">
+        <label for="team" class="text-gray-700 font-medium">Create new Pokemon team:</label>
+        <input type="" id="team" name="team" [(ngModel)]="team"
+            class="border rounded p-2 focus:outline-none focus:ring-2 focus:ring-red-500">
+        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+            Create new team
+        </button>
+    </form>
+</div>

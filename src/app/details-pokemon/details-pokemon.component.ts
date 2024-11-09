@@ -21,7 +21,7 @@ import { PokemonService } from '../services/api.service';
 export class DetailsPokemonComponent {
   constructor(private pokemonService: PokemonService) { }
 
-
+ 
   isReverse: boolean = false;
   @Input() pokemon: any;
   @Output() isClicked = new EventEmitter<boolean>();

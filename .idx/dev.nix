@@ -8,6 +8,7 @@
     pkgs.nodejs_20
     pkgs.openssl_3_1
     pkgs.sudo
+    pkgs.docker
    
   ];
   # Sets environment variables in the workspace

@@ -1,0 +1,23 @@
+<h2>New Player</h2>
+<div class="m-10 p-4 border rounded shadow-md">
+  <form (ngSubmit)="onSubmit()" class="flex flex-col gap-2">
+    <label for="email" class="text-gray-700 font-medium">Email:</label>
+    <input type="email" id="email" name="email" [(ngModel)]="email"
+      class="border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <label for="name" class="text-gray-700 font-medium">NickName:</label>
+    <input type="text" id="nickName" name="nickName" [(ngModel)]="nickName"
+      class="border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <label for="password" class="text-gray-700 font-medium">Password:</label>
+    <input type="password" id="password" name="password" [(ngModel)]="password"
+      class="border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <button type="submit" class="
+bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+      Create Player
+    </button>
+  </form>
+  <div class="mt-4">
+    <button (click)="traerDatos()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+      traerBackend
+    </button>
+  </div>
+</div>

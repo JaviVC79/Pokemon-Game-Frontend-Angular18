@@ -1,0 +1,23 @@
+<h2 *ngIf="!teams">You don't have teams yet</h2>
+<add-team-form />
+<h3 *ngIf="teams">Select your team to play or to add more pokemons in your team:</h3>
+<ng-container *ngFor="let team of teams">
+    <div class="justify-items-start mt-10">
+        <button mat-fab extended class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10"
+            (click)="selectTeam(team.id,team.name)">{{team.name}}</button>
+        <ng-container *ngFor="let pokemon of pokemons">
+            <div *ngIf="team.id === pokemon.teamId"
+                class="border border-solid border-slate-500 rounded-lg m-2 w-full bg-white">
+                <p class="m-2"><strong>Name:</strong> {{pokemon.name.toUpperCase()}}</p>
+                <p class="m-2"><strong>Abilities:</strong> {{pokemon.abilities}}</p>
+                <p class="m-2"><strong>Types:</strong> {{pokemon.types}}</p>
+                <p class="m-2"><strong>Moves:</strong> {{pokemon.moves}}</p>
+                <p class="m-2"><strong>HP:</strong> {{pokemon.stats.hp}}</p>
+                <p class="m-2"><strong>Attack:</strong> {{pokemon.stats.attack}}</p>
+                <p class="m-2"><strong>Defense:</strong> {{pokemon.stats.defense}}</p>
+                <p class="m-2"><strong>Speed:</strong> {{pokemon.stats.speed}}</p>
+
+            </div>
+        </ng-container>
+    </div>
+</ng-container>

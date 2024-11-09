@@ -1,6 +1,6 @@
 <ng-container *ngIf="!isClicked">
   <app-back-forward-buttons (offsetChange)="manejarOffset($event)" (limitChange)="manejarLimit($event)" />
-  <div class="container grid gap-4 grid-cols-3 grid-rows-3 mt-5 justify-items-center">
+  <div class="container grid gap-4 grid-cols-3 grid-rows-3 mt-5 justify-items-center">  
     <ng-container *ngFor="let pokemon of pokemons">
       <div class="relative w-full h-96 perspective">
         <div

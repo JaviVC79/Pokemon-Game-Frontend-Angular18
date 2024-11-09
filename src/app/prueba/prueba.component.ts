@@ -15,6 +15,7 @@ import { GameService } from './prueba.logicGame.service';
 
 
 
+
 export interface Data {
   count: number;
   next: string;
@@ -64,8 +65,9 @@ export class PruebaComponent implements OnInit {
   pokemons: any[] | null = [];
   moves: any[] | null = [];
   
-  constructor(private pokemonService: PokemonService) { }
-  gameService: GameService = new GameService();
+  constructor(private pokemonService: PokemonService, private gameService: GameService) { }
+ 
+  
   async ngOnInit() {
     localStorage.getItem('offset') ? Number(localStorage.getItem('offset')) : localStorage.setItem('offset', '0');
     localStorage.getItem('limit') ? Number(localStorage.getItem('limit')) : localStorage.setItem('limit', '99');
@@ -94,6 +96,7 @@ export class PruebaComponent implements OnInit {
   clicked_id: number | null = null;
   pokemon: any | null = null;
   pokemonDetail: string = "stats";
+  
 
   async clickCard(id: number) {
     this.clicked_id = id;

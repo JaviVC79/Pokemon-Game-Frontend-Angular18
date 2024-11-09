@@ -1,8 +1,13 @@
 import { Routes } from '@angular/router';
 import { PruebaComponent } from './prueba/prueba.component';
-import { prueba2Component } from './prueba2/prueba2.component';
+import { createPlayerFormComponent } from './create-player-form/create-player-form.component';
 import { DetailsPokemonComponent } from './details-pokemon/details-pokemon.component';
+import { LoginPlayerFormComponent } from './login-player-form/login-player-form.component';
+import { TeamsComponent } from './teams/teams.component';
 
-export const routes: Routes = [{ path: 'prueba', component: PruebaComponent }, { path: 'prueba2', component: prueba2Component },
+export const routes: Routes = [{ path: 'prueba', component: PruebaComponent }, 
+{ path: 'createPlayerForm', component: createPlayerFormComponent },
 { path: 'pokemonDetails', component: DetailsPokemonComponent },
+{ path: 'loginPlayerForm', component: LoginPlayerFormComponent },
+{ path: 'teams', component: TeamsComponent },
 ];

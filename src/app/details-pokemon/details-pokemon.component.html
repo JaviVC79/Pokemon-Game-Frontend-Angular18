@@ -6,9 +6,9 @@
         <img *ngIf="isReverse" src={{pokemon.sprites.back_shiny}} alt={{pokemon.sprites.back_shiny}}
             class="w-full object-cover" (click)="clickReverse()" />
         <div class="flex flex-col justify-end items-center cursor-pointer bg-red-400" (click)="clickBack()">
-            <h3 class="text-white text-2xl font-bold m-4">{{pokemon.name.toUpperCase()}}</h3>
-            <p class="text-white text-lg font-bold m-4">Height: {{pokemon.height}}</p>
-            <p class="text-white text-lg font-bold m-4">Weight: {{pokemon.weight}}</p>
+            <h3 *ngIf="pokemon?.name" class="text-white text-2xl font-bold m-4">{{ pokemon.name.toUpperCase() }}</h3>
+            <p *ngIf="pokemon?.height" class="text-white text-lg font-bold m-4">Height: {{pokemon.height}}</p>
+            <p *ngIf="pokemon?.weight" class="text-white text-lg font-bold m-4">Weight: {{pokemon.weight}}</p>
         </div>
     </div>
     <div class="flex flex-col justify-center items-center mb-4">

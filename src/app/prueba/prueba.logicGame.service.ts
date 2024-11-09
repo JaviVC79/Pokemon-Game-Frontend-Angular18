@@ -1,4 +1,9 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { lastValueFrom } from "rxjs";
+import { CookieService } from 'ngx-cookie-service';
+import { TeamsResponse } from "../utils/types/pokemonType";
+
 
 interface pokemonStats {
     hp: number;
@@ -8,12 +13,34 @@ interface pokemonStats {
     specialDefense: number;
     speed: number;
 }
+
+type StatsDto = {
+    hp: number;
+    attack: number;
+    specialAttack: number;
+    defense: number;
+    specialDefense: number;
+    speed: number;
+}
+
+type PokemonDto = {
+    id: number;
+    name: string;
+    statsId: number;
+    types: string;
+    abilities: string;
+    moves: string;
+    teamId: number;
+}
+
 @Injectable({
     providedIn: 'root',
 })
 export class GameService {
 
 
+
+    constructor(private http: HttpClient, private cookieService: CookieService) { }
 
     player1: string = "";
     player2: string = "";
@@ -44,7 +71,7 @@ export class GameService {
     addPokemonPlayer(pokemon: any) {
         //console.log(pokemon)
         //console.log(this.player1PokemonStats.length)
-       //console.log(this.player2PokemonStats.length)
+        //console.log(this.player2PokemonStats.length)
         if (!localStorage.getItem('player1PokemonStats') && this.player1PokemonStats.length >= 6) {
             this.player1PokemonStats.length = 0;
             this.player1PokemonStats = [];
@@ -82,4 +109,112 @@ export class GameService {
             this.player2Turn = !this.player2Turn;
         }
     }
+
+    async getPokemon(pokemon: any): Promise<any> {
+        const stats: StatsDto = {
+            hp: pokemon.stats[0].base_stat,
+            attack: pokemon.stats[1].base_stat,
+            defense: pokemon.stats[2].base_stat,
+            specialAttack: pokemon.stats[3].base_stat,
+            specialDefense: pokemon.stats[4].base_stat,
+            speed: pokemon.stats[5].base_stat,
+        }
+        const selectedPokemon: Partial<PokemonDto> = {
+            name: pokemon.name,
+            types: pokemon.types.map((type: any) => type.type.name).join(', '),
+            abilities: pokemon.abilities.map((ability: any) => ability.ability.name).join(', '),
+            moves: pokemon.moves.map((move: any) => move.move.name).join(', '),
+        };
+        const body = [selectedPokemon, stats];
+        return body
+    }
+
+    async createNewTeam(teamName: string) {
+        const jwt = this.cookieService.get('jwt');
+        const body = {
+            name: teamName
+        }
+        const url = `https://3000-idx-pokemongameapi-1725292582953.cluster-rcyheetymngt4qx5fpswua3ry4.cloudworkstations.dev/pokemon-api/team`
+        try {
+            const response = await lastValueFrom(this.http.post<Array<any>>(url, body, {
+                withCredentials: true,
+                headers: {
+                    authorization: `Bearer ${jwt}`
+                }
+            }));
+            if (!response) return null;
+            return response;
+        } catch (error) {
+            console.log(error);
+            return error
+        }
+    }
+
+    async createNewPokemon(pokemon: string[], teamId: number) {
+        const jwt = this.cookieService.get('jwt');
+        const body = pokemon
+        console.log(pokemon, teamId)
+        const url = `https://3000-idx-pokemongameapi-1725292582953.cluster-rcyheetymngt4qx5fpswua3ry4.cloudworkstations.dev/pokemon-api/pokemon/${teamId}`
+        try {
+            const response = await lastValueFrom(this.http.post<Array<any>>(url, body, {
+                withCredentials: true,
+                headers: {
+                    authorization: `Bearer ${jwt}`
+                }
+            }));
+            if (!response) return null;
+            console.log(response);
+            return response;
+        } catch (error) {
+            console.log(error);
+            return error
+        }
+    }
+
+    isLogin(): boolean | null {
+        if (this.cookieService.get('jwt')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    async getTeams(): Promise<TeamsResponse | null> {
+        const jwt = this.cookieService.get('jwt'); {
+            const url = `https://3000-idx-pokemongameapi-1725292582953.cluster-rcyheetymngt4qx5fpswua3ry4.cloudworkstations.dev/pokemon-api/teams`
+            try {
+                const response: any = await lastValueFrom(this.http.get<Array<any>>(url, {
+                    withCredentials: true,
+                    headers: {
+                        authorization: `Bearer ${jwt}`
+                    }
+                }));
+                if (!response) return null;
+                return response;
+            } catch (error) {
+                console.log(error);
+                return null
+            }
+        }
+
+    }
+    async getPlayerPokemons() {
+        const jwt = this.cookieService.get('jwt'); {
+            const url = `https://3000-idx-pokemongameapi-1725292582953.cluster-rcyheetymngt4qx5fpswua3ry4.cloudworkstations.dev/pokemon-api/pokemons`
+            try {
+                const response: any = await lastValueFrom(this.http.get<Array<any>>(url, {
+                    withCredentials: true,
+                    headers: {
+                        authorization: `Bearer ${jwt}`
+                    }
+                }));
+                if (!response) return null;
+                return response;
+            } catch (error) {
+                console.log(error);
+                return null
+            }
+        }
+    }
+
 }

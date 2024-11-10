@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet, RouterModule } from '@angular/router';
+import { RouterOutlet, RouterModule, Router } from '@angular/router';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
@@ -10,8 +10,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { CookieService } from 'ngx-cookie-service';
-import { GameService } from './prueba/prueba.logicGame.service';
 import { AuthService } from '../app/services/auth.service';
+
 
 @Component({
   selector: 'app-root',
@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
   title = 'myapp';
   isLogin: boolean | null = null;
   
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
     this.authService.loggedIn$.subscribe((status) => {
@@ -36,6 +36,10 @@ export class AppComponent implements OnInit {
   }
   ngDoCheck() {
     this.isLogin = this.authService.isLogin();
+  }
+  logOut(){
+    this.authService.logout();
+    this.router.navigateByUrl('/login');
   }
 
 }

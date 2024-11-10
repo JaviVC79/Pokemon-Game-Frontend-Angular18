@@ -1,10 +1,16 @@
 <h2 *ngIf="!teams">You don't have teams yet</h2>
-<add-team-form />
+<add-team-form (teamsChange)="onTeamsChange($event)" />
 <h3 *ngIf="teams">Select your team to play or to add more pokemons in your team:</h3>
 <ng-container *ngFor="let team of teams">
     <div class="justify-items-start mt-10">
         <button mat-fab extended class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10"
             (click)="selectTeam(team.id,team.name)">{{team.name}}</button>
+        <button *ngIf="team.id === teamId" mat-fab extended
+            class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10 ml-4"
+            (click)="removeTeam(team.id)">Remove: {{team.name}}</button>
+        <button *ngIf="team.id === teamId" mat-fab extended
+            class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10 ml-4"
+            (click)="gotoPokemons()">Add new pokemon to: {{team.name}}</button>
         <ng-container *ngFor="let pokemon of pokemons">
             <div *ngIf="team.id === pokemon.teamId"
                 class="border border-solid border-slate-500 rounded-lg m-2 w-full bg-white">

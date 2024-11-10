@@ -25,6 +25,7 @@ export class AuthService {
   }
 
   logout() {
+    this.cookieService.delete('jwt');
     this.loggedInSubject.next(false);
   }
 }

@@ -5,9 +5,9 @@ import { DetailsPokemonComponent } from './details-pokemon/details-pokemon.compo
 import { LoginPlayerFormComponent } from './login-player-form/login-player-form.component';
 import { TeamsComponent } from './teams/teams.component';
 
-export const routes: Routes = [{ path: 'prueba', component: PruebaComponent }, 
+export const routes: Routes = [{ path: 'pokemons', component: PruebaComponent }, 
 { path: 'createPlayerForm', component: createPlayerFormComponent },
 { path: 'pokemonDetails', component: DetailsPokemonComponent },
-{ path: 'loginPlayerForm', component: LoginPlayerFormComponent },
+{ path: 'login', component: LoginPlayerFormComponent },
 { path: 'teams', component: TeamsComponent },
 ];

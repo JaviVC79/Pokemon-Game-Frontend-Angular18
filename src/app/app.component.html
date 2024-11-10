@@ -9,33 +9,38 @@
         </a>
       </div>
       <div>
-        <a mat-fab extended routerLink="/prueba">
+        <a mat-fab extended routerLink="/pokemons">
           <mat-icon>pie_chart</mat-icon>
           Pokemons
         </a>
       </div>
       <div *ngIf="isLogin">
         <a *ngIf="isLogin" mat-fab extended routerLink="/teams">
-          <mat-icon *ngIf="isLogin" >pie_chart</mat-icon>
+          <mat-icon *ngIf="isLogin">pie_chart</mat-icon>
           Player Teams
         </a>
       </div>
       <div *ngIf="!isLogin">
         <a *ngIf="!isLogin" mat-fab extended routerLink="/createPlayerForm">
-          <mat-icon>Formulario</mat-icon>
+          <mat-icon>sports_esports</mat-icon>
           NewPlayer
         </a>
       </div>
       <div *ngIf="!isLogin">
-        <a *ngIf="!isLogin" mat-fab extended routerLink="/loginPlayerForm">
-          <mat-icon>Formulario</mat-icon>
+        <a *ngIf="!isLogin" mat-fab extended routerLink="/login">
+          <mat-icon>login</mat-icon>
           Login
         </a>
+      </div>
+      <div *ngIf="isLogin">
+        <button *ngIf="isLogin" mat-fab extended (click)="logOut()">
+          <mat-icon>logout</mat-icon>
+          LogOut
+        </button>
       </div>
     </nav>
     <h1>Pokemon App</h1>
   </div>
 </main>
-
 
 <router-outlet />

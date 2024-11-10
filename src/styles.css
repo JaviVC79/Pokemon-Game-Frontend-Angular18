@@ -3,7 +3,7 @@
 @tailwind utilities;/* You can add global styles to this file, and also import other style files */
 
 
-body { margin: 50px; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 50px; font-family: Roboto, "Helvetica Neue", sans-serif; align-items: center; justify-items: center;}
 @layer utilities {
   .rotate-y-180 {
     transform: rotateY(180deg);

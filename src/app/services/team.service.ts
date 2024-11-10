@@ -13,6 +13,8 @@ interface Team {
 export class TeamService {
   private teamIdSubject = new BehaviorSubject<Team>({ id: 0, name: '' });
   teamId$ = this.teamIdSubject.asObservable();
+  private teamsSubject = new BehaviorSubject<any>([]);
+  teams$ = this.teamsSubject.asObservable();
   
   setTeamId(teamId: number, teamName: string) {
     const team: Team = {
@@ -20,5 +22,9 @@ export class TeamService {
       name: teamName
     }
     this.teamIdSubject.next(team);
+  }
+
+  setTeams(teams:any){
+    this.teamsSubject.next(teams);
   }
 }

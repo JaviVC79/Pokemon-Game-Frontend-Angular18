@@ -4,6 +4,7 @@
         <mat-icon>donut_small</mat-icon>
         Add to {{team.name}}
       </button>
+      <a *ngIf="!isLogin" href="/loginPlayerForm">You need to be logged in to create teams and add Pokémon.</a>
       <button *ngIf="!team.name" disabled mat-fab extended style="background-color: rgba(255, 0, 21, 0.39);" class="rounded-lg p-2" (click)="addPokemon(pokemon)">
         <mat-icon>donut_small</mat-icon>
         Select a team to add pokemon

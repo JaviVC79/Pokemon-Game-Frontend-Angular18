@@ -22,6 +22,7 @@ export class TeamsComponent implements OnInit {
   teams: any | null = null;
   pokemons: any[] = [];
   teamId: number = 0;
+  pokemonId: number = 0;
   constructor(private gameService: GameService, private teamService: TeamService, private router: Router) { }
 
   ngOnInit() {
@@ -50,8 +51,17 @@ export class TeamsComponent implements OnInit {
     await this.getTeams();
   }
 
+  async removePokemon(pokemonId: number) {
+    await this.gameService.removePokemon(pokemonId);
+    await this.getPlayerPokemons();
+  }
+
   gotoPokemons() {
     this.router.navigateByUrl('/pokemons');
+  }
+
+  getPokemonId(pokemonId: number) {
+    this.pokemonId = pokemonId;
   }
 
   selectTeam(teamId: number, teamName: string) {

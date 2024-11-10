@@ -37,7 +37,6 @@ type PokemonDto = {
     providedIn: 'root',
 })
 export class GameService {
-
     constructor(private http: HttpClient, private cookieService: CookieService) { }
 
     player1: string = "";
@@ -215,8 +214,8 @@ export class GameService {
             }
         }
     }
-    
-    async removeTeam(teamId:number) {
+
+    async removeTeam(teamId: number) {
         const jwt = this.cookieService.get('jwt'); {
             const url = `https://3000-idx-pokemongameapi-1725292582953.cluster-rcyheetymngt4qx5fpswua3ry4.cloudworkstations.dev/pokemon-api/team/${teamId}`
             try {
@@ -233,5 +232,24 @@ export class GameService {
                 return null
             }
         }
-      }
+    }
+
+    async removePokemon(pokemonId: number) {
+        const jwt = this.cookieService.get('jwt'); {
+            const url = `https://3000-idx-pokemongameapi-1725292582953.cluster-rcyheetymngt4qx5fpswua3ry4.cloudworkstations.dev/pokemon-api/pokemon/${pokemonId}`
+            try {
+                const response: any = await lastValueFrom(this.http.delete<Array<any>>(url, {
+                    withCredentials: true,
+                    headers: {
+                        authorization: `Bearer ${jwt}`
+                    }
+                }));
+                if (!response) return null;
+                return response;
+            } catch (error) {
+                console.log(error);
+                return null
+            }
+        }
+    }
 }

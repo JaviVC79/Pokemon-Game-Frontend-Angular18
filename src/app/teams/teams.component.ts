@@ -5,6 +5,11 @@ import { TeamsResponse } from '../utils/types/pokemonType';
 import { TeamService } from '../services/team.service';
 import { AddTeamFormComponent } from '../add-team-form/add-team-form.component';
 import { Router } from '@angular/router';
+import { VgCoreModule } from '@videogular/ngx-videogular/core';
+import { VideoPlayerComponent } from './video-player/video-player.component';
+import { TeamsListComponent } from "./teams-list/teams-list.component";
+import { NewGameButtonComponent } from "./new-game-button/new-game-button.component";
+
 
 export interface Team {
   id: number;
@@ -14,41 +19,62 @@ export interface Team {
 @Component({
   selector: 'app-teams',
   standalone: true,
-  imports: [NgFor, NgIf, AddTeamFormComponent],
+  imports: [NgFor, NgIf, AddTeamFormComponent, VgCoreModule, VideoPlayerComponent, TeamsListComponent, NewGameButtonComponent],
   templateUrl: './teams.component.html',
   styleUrl: './teams.component.css'
 })
+
 export class TeamsComponent implements OnInit {
   teams: any | null = null;
   pokemons: any[] = [];
   teamId: number = 0;
+  teamCompletedId: number = 0;
   pokemonId: number = 0;
+  completedTeamsId: any[] = [];
+  completedTeams: any[] = [];
+  incompletedTeams: any[] = [];
+
   constructor(private gameService: GameService, private teamService: TeamService, private router: Router) { }
 
-  ngOnInit() {
-    this.getTeams();
-    this.getPlayerPokemons();
+  async ngOnInit() {
+    await this.getTeams();
+    await this.getPlayerPokemons();
   }
 
-  onTeamsChange(newTeams: any[]) {
+  async onTeamsChange(newTeams: any[]) {
     this.teams = newTeams;
+    await this.getTeams();
+    await this.getPlayerPokemons();
   }
+  
   async getTeams() {
     const teams: TeamsResponse | null = await this.gameService.getTeams();
     this.teams = teams?.teams;
-    this.setTeams(teams);
+    this.setTeams(this.teams);
   }
 
   async getPlayerPokemons() {
     const pokemons = await this.gameService.getPlayerPokemons();
     if (pokemons?.pokemonsAndStats) {
       this.pokemons = pokemons.pokemonsAndStats.sort((a: any, b: any) => a.teamId - b.teamId);
+      // Contar las ocurrencias de cada teamId
+      const teamIdCounts = this.pokemons.reduce((acc, pokemon) => {
+        acc[pokemon.teamId] = (acc[pokemon.teamId] || 0) + 1;
+        return acc;
+      }, {});
+      // Obtener los teamId que se repiten cinco o más veces
+      const frequentTeamIds = Object.keys(teamIdCounts).filter(teamId => teamIdCounts[teamId] >= 5);
+      this.completedTeams = frequentTeamIds.map(teamId => this.teams.find((team: any) => team.id === parseInt(teamId)));
+      this.incompletedTeams = [...this.teams].filter(team => !frequentTeamIds.includes(team.id.toString()));
+      this.completedTeamsId = frequentTeamIds;
+      this.teamService.setPokemonsInTeam(this.completedTeamsId);
     }
   }
 
   async removeTeam(teamId: number) {
     await this.gameService.removeTeam(teamId);
     await this.getTeams();
+    await this.getPlayerPokemons();
   }
 
   async removePokemon(pokemonId: number) {
@@ -66,6 +92,10 @@ export class TeamsComponent implements OnInit {
 
   selectTeam(teamId: number, teamName: string) {
     this.teamService.setTeamId(teamId, teamName);
+    this.teamId = teamId;
+  }
+  selectCompletedTeam(teamId: number) {
+    this.teamService.setTeamId(0, '');
     this.teamId = teamId;
   }
 

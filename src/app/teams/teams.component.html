@@ -1,8 +1,10 @@
+<app-video-player />
 <h2 *ngIf="!teams">You don't have teams yet</h2>
 <add-team-form (teamsChange)="onTeamsChange($event)" />
-<h3 *ngIf="teams">Select your team to play or to add more pokemons in your team:</h3>
-<ng-container *ngFor="let team of teams">
-    <div class="justify-items-start mt-10">
+<h3 *ngIf="teams" class="rounded-lg p-2 bg-red-300 mb-10 text-lg">Select your team to play or to add more pokemons in
+    your team:</h3>
+<ng-container *ngFor="let team of incompletedTeams">
+    <div class="justify-items-start mt-10 rounded-lg border border-solid border-slate-500">
         <button mat-fab extended class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10"
             (click)="selectTeam(team.id,team.name)">{{team.name}}</button>
         <button *ngIf="team.id === teamId" mat-fab extended
@@ -11,24 +13,21 @@
         <button *ngIf="team.id === teamId" mat-fab extended
             class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10 ml-4" (click)="gotoPokemons()">Add
             new pokemon to: {{team.name}}</button>
-        <ng-container *ngFor="let pokemon of pokemons">
-            <div *ngIf="team.id === pokemon.teamId"
-                class="border border-solid border-slate-500 rounded-lg m-2 w-full bg-white"
-                (click)="getPokemonId(pokemon.id)">
-                <div class="justify-items-start">
-                    <button *ngIf="pokemon.id === pokemonId" mat-fab extended
-                    class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 my-2 ml-4"
-                    (click)="removePokemon(pokemon.id)">Remove: {{pokemon.name}}</button>
-                    <p class="m-2"><strong>Name:</strong> {{pokemon.name.toUpperCase()}}</p>
-                    <p class="m-2"><strong>Abilities:</strong> {{pokemon.abilities}}</p>
-                    <p class="m-2"><strong>Types:</strong> {{pokemon.types}}</p>
-                    <p class="m-2"><strong>Moves:</strong> {{pokemon.moves}}</p>
-                    <p class="m-2"><strong>HP:</strong> {{pokemon.stats.hp}}</p>
-                    <p class="m-2"><strong>Attack:</strong> {{pokemon.stats.attack}}</p>
-                    <p class="m-2"><strong>Defense:</strong> {{pokemon.stats.defense}}</p>
-                    <p class="m-2"><strong>Speed:</strong> {{pokemon.stats.speed}}</p>
-                </div>
-            </div>
-        </ng-container>
+        <app-teams-list [pokemons]="pokemons" [teamId]="teamId" [pokemonId]="pokemonId" [team]="team"
+            [removePokemon]="removePokemon.bind(this)" />
+    </div>
+</ng-container>
+<ng-container *ngFor="let team of completedTeams">
+    <div class="justify-items-start mt-10 rounded-lg border border-solid border-slate-500">
+        <button mat-fab extended class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10"
+            (click)="selectCompletedTeam(team.id)">{{team.name}}</button>
+        <button *ngIf="team.id === teamId" mat-fab extended
+            class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10 ml-4"
+            (click)="removeTeam(team.id)">Remove: {{team.name}}</button>
+        <button *ngIf="team.id === teamId" mat-fab extended class="rounded-lg p-2 bg-red-300 mb-10 ml-4">{{team.name}}
+            is no longer accepting new members.</button>
+        <app-new-game-button [team]="team" [teamId]="teamId" [pokemons]="pokemons" />
+        <app-teams-list [pokemons]="pokemons" [teamId]="teamId" [pokemonId]="pokemonId" [team]="team"
+            [removePokemon]="removePokemon.bind(this)" />
     </div>
 </ng-container>

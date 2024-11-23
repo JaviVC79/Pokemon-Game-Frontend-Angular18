@@ -1,7 +1,10 @@
 .pressed {
     @apply text-2xl font-bold rounded-lg bg-red-500 p-4;
+    @apply sm:text-lg p-2 md:text-xl p-2 lg:text-2xl xl:text-3xl;
 }
 
 .noPressed {
     @apply text-2xl font-bold rounded-lg bg-red-300 hover:bg-red-500 p-4;
+    @apply sm:text-lg p-2 md:text-xl p-2 lg:text-2xl xl:text-3xl;
 }
+

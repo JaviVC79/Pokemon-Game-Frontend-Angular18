@@ -13,8 +13,9 @@
     </div>
     <div class="flex flex-col justify-center items-center mb-4">
         <h2 class="text-2xl font-bold m-4" *ngIf="pokemonDetail=='moves'">{{pokemonDetailMoveName?.toUpperCase()}}</h2>
-        <p *ngIf="pokemonDetail=='moves'">{{pokemonDetailMoveEffect}}</p>
-        <div class="relative container grid gap-4 grid-cols-4 m-5 justify-items-center">
+        <p *ngIf="pokemonDetail=='moves'" class="max-w-xl min-h-xl h-48 overflow-auto">{{pokemonDetailMoveEffect}}</p>
+        <p *ngIf="pokemonDetail!='moves'" class="max-w-xl min-h-xl h-48 overflow-auto"></p>
+        <div class="relative container grid gap-4 grid-cols-4 m-5 justify-items-center overflow-x-auto">
             <h3 [ngClass]="{'pressed': pokemonDetail === 'moves', 'noPressed': pokemonDetail !== 'moves'}"
                 (click)="handlepokemonsDetails('moves')">Moves</h3>
             <h3 [ngClass]="{'pressed': pokemonDetail === 'stats', 'noPressed': pokemonDetail !== 'stats'}"
@@ -26,7 +27,7 @@
         </div>
         <ng-container [ngSwitch]="pokemonDetail">
             <ng-container *ngSwitchCase="'moves'">
-                <div class="container grid gap-4 grid-cols-6 justify-items-center m-4">
+                <div class="container grid gap-4 grid-cols-4 justify-items-center m-4 h-14 overflow-auto">
                     <ul *ngFor="let move of pokemon.moves"
                         class="rounded bg-red-400 w-full text-center text-white text-sm"
                         (click)="getAttacksEffects(move.move.url)">

@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { lastValueFrom } from "rxjs";
 import { CookieService } from 'ngx-cookie-service';
 import { TeamsResponse } from "../utils/types/pokemonType";
+import { GameBattleService } from "../services/game-battle.service";
 
 
 interface pokemonStats {
@@ -37,7 +38,9 @@ type PokemonDto = {
     providedIn: 'root',
 })
 export class GameService {
-    constructor(private http: HttpClient, private cookieService: CookieService) { }
+    constructor(private http: HttpClient, 
+        private gameBattleService: GameBattleService,
+        private cookieService: CookieService) { }
 
     player1: string = "";
     player2: string = "";
@@ -151,7 +154,6 @@ export class GameService {
     async createNewPokemon(pokemon: string[], teamId: number) {
         const jwt = this.cookieService.get('jwt');
         const body = pokemon
-        console.log(pokemon, teamId)
         const url = `https://3000-idx-pokemongameapi-1725292582953.cluster-rcyheetymngt4qx5fpswua3ry4.cloudworkstations.dev/pokemon-api/pokemon/${teamId}`
         try {
             const response = await lastValueFrom(this.http.post<Array<any>>(url, body, {
@@ -161,7 +163,6 @@ export class GameService {
                 }
             }));
             if (!response) return null;
-            console.log(response);
             return response;
         } catch (error) {
             console.log(error);

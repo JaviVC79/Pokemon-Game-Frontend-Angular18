@@ -1,0 +1,19 @@
+/* teams-list.component.css */
+.columns-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+  
+  .w-28 {
+    width: 7rem;
+  }
+  
+  .m-5 {
+    margin: 1.25rem;
+  }
+  
+  .align-center {
+    text-align: center;
+  }
+  

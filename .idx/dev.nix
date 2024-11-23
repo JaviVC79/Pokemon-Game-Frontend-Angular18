@@ -9,10 +9,10 @@
     pkgs.openssl_3_1
     pkgs.sudo
     pkgs.docker
-   
+
   ];
   # Sets environment variables in the workspace
-  env = {};
+  env = { };
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
@@ -26,16 +26,19 @@
         default.openFiles = [ "src/app/app.component.ts" ];
       };
       # To run something each time the workspace is (re)started, use the `onStart` hook
+      onStart = {
+        watch-frontend = "ng serve";
+      };
     };
     # Enable previews and customize configuration
-    previews = {
+    /*previews = {
       enable = true;
       previews = {
         web = {
-          command = ["npm" "run" "start" "--" "--port" "$PORT" "--host" "0.0.0.0" "--disable-host-check"];
+          command = [ "npm" "run" "start" "--" "--port" "$PORT" "--host" "0.0.0.0" "--disable-host-check" ];
           manager = "web";
         };
       };
-    };
+    };*/
   };
 }

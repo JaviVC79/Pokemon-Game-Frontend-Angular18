@@ -26,7 +26,7 @@
             (click)="removeTeam(team.id)">Remove: {{team.name}}</button>
         <button *ngIf="team.id === teamId" mat-fab extended class="rounded-lg p-2 bg-red-300 mb-10 ml-4">{{team.name}}
             is no longer accepting new members.</button>
-        <app-new-game-button [team]="team" [teamId]="teamId" [pokemons]="pokemons" />
+        <app-new-game-button [team]="team" [teamId]="teamId" [pokemons]="pokemons" [games]="games" [teams]="teams" />
         <app-teams-list [pokemons]="pokemons" [teamId]="teamId" [pokemonId]="pokemonId" [team]="team"
             [removePokemon]="removePokemon.bind(this)" />
     </div>

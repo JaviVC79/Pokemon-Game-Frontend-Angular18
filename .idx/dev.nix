@@ -12,7 +12,7 @@
 
   ];
   # Sets environment variables in the workspace
-  env = { };
+  env = { PORT="http://localhost:3000";};
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
@@ -30,7 +30,7 @@
         watch-frontend = "ng serve";
       };
     };
-    # Enable previews and customize configuration
+    # Enable previews and customize configuratio
     /*previews = {
       enable = true;
       previews = {

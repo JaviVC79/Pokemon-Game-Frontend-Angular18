@@ -4,7 +4,7 @@ import { lastValueFrom } from "rxjs";
 import { CookieService } from 'ngx-cookie-service';
 import { TeamsResponse } from "../utils/types/pokemonType";
 import { GameBattleService } from "../services/game-battle.service";
-
+import { environment } from "../../environments/environment";
 
 interface pokemonStats {
     hp: number;
@@ -41,6 +41,7 @@ export class GameService {
     constructor(private http: HttpClient, 
         private gameBattleService: GameBattleService,
         private cookieService: CookieService) { }
+        private apiUrl = environment.apiUrl;
 
     player1: string = "";
     player2: string = "";
@@ -135,7 +136,7 @@ export class GameService {
         const body = {
             name: teamName
         }
-        const url = `https://3000-idx-pokemongameapi-1725292582953.cluster-rcyheetymngt4qx5fpswua3ry4.cloudworkstations.dev/pokemon-api/team`
+        const url = `${this.apiUrl}/team`
         try {
             const response = await lastValueFrom(this.http.post<Array<any>>(url, body, {
                 withCredentials: true,
@@ -154,7 +155,7 @@ export class GameService {
     async createNewPokemon(pokemon: string[], teamId: number) {
         const jwt = this.cookieService.get('jwt');
         const body = pokemon
-        const url = `https://3000-idx-pokemongameapi-1725292582953.cluster-rcyheetymngt4qx5fpswua3ry4.cloudworkstations.dev/pokemon-api/pokemon/${teamId}`
+        const url = `${this.apiUrl}/pokemon/${teamId}`
         try {
             const response = await lastValueFrom(this.http.post<Array<any>>(url, body, {
                 withCredentials: true,
@@ -180,7 +181,7 @@ export class GameService {
 
     async getTeams(): Promise<TeamsResponse | null> {
         const jwt = this.cookieService.get('jwt'); {
-            const url = `https://3000-idx-pokemongameapi-1725292582953.cluster-rcyheetymngt4qx5fpswua3ry4.cloudworkstations.dev/pokemon-api/teams`
+            const url = `${this.apiUrl}/teams`
             try {
                 const response: any = await lastValueFrom(this.http.get<Array<any>>(url, {
                     withCredentials: true,
@@ -199,7 +200,7 @@ export class GameService {
     }
     async getPlayerPokemons() {
         const jwt = this.cookieService.get('jwt'); {
-            const url = `https://3000-idx-pokemongameapi-1725292582953.cluster-rcyheetymngt4qx5fpswua3ry4.cloudworkstations.dev/pokemon-api/pokemons`
+            const url = `${this.apiUrl}/pokemons`
             try {
                 const response: any = await lastValueFrom(this.http.get<Array<any>>(url, {
                     withCredentials: true,
@@ -218,7 +219,7 @@ export class GameService {
 
     async removeTeam(teamId: number) {
         const jwt = this.cookieService.get('jwt'); {
-            const url = `https://3000-idx-pokemongameapi-1725292582953.cluster-rcyheetymngt4qx5fpswua3ry4.cloudworkstations.dev/pokemon-api/team/${teamId}`
+            const url = `${this.apiUrl}/team/${teamId}`
             try {
                 const response: any = await lastValueFrom(this.http.delete<Array<any>>(url, {
                     withCredentials: true,
@@ -237,7 +238,7 @@ export class GameService {
 
     async removePokemon(pokemonId: number) {
         const jwt = this.cookieService.get('jwt'); {
-            const url = `https://3000-idx-pokemongameapi-1725292582953.cluster-rcyheetymngt4qx5fpswua3ry4.cloudworkstations.dev/pokemon-api/pokemon/${pokemonId}`
+            const url = `${this.apiUrl}/pokemon/${pokemonId}`
             try {
                 const response: any = await lastValueFrom(this.http.delete<Array<any>>(url, {
                     withCredentials: true,

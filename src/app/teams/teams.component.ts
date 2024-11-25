@@ -9,12 +9,16 @@ import { VgCoreModule } from '@videogular/ngx-videogular/core';
 import { VideoPlayerComponent } from './video-player/video-player.component';
 import { TeamsListComponent } from "./teams-list/teams-list.component";
 import { NewGameButtonComponent } from "./new-game-button/new-game-button.component";
-
+import { Game } from '../services/game-battle.service';
+import { GameBattleService } from '../services/game-battle.service';
 
 export interface Team {
   id: number;
   name: string;
 }
+
+
+
 
 @Component({
   selector: 'app-teams',
@@ -33,12 +37,16 @@ export class TeamsComponent implements OnInit {
   completedTeamsId: any[] = [];
   completedTeams: any[] = [];
   incompletedTeams: any[] = [];
+  games: Game[] | null = [];
 
-  constructor(private gameService: GameService, private teamService: TeamService, private router: Router) { }
+  constructor(private gameService: GameService, 
+    private gameBattleService: GameBattleService,
+    private teamService: TeamService, private router: Router) { }
 
   async ngOnInit() {
     await this.getTeams();
     await this.getPlayerPokemons();
+    await this.getGames();
   }
 
   async onTeamsChange(newTeams: any[]) {
@@ -69,6 +77,12 @@ export class TeamsComponent implements OnInit {
       this.completedTeamsId = frequentTeamIds;
       this.teamService.setPokemonsInTeam(this.completedTeamsId);
     }
+  }
+
+  async getGames() {
+    const games: Game[] | null = await this.gameBattleService.getGames();
+    console.log(games)
+    this.games = games;
   }
 
   async removeTeam(teamId: number) {

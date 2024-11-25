@@ -9,7 +9,8 @@ import { Router } from '@angular/router';
 import { PopupNoDataComponent } from '../pop-ups/login-pop-ups/popup-no-data.component';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupUnauthorizedLoginComponent } from '../pop-ups/login-pop-ups/popup-unauthorized-login.component';
-
+import { environment } from '../../environments/environment';
+const apiUrl = environment.apiUrl;
 @Component({
   selector: 'app-login-player-form',
   standalone: true,
@@ -22,6 +23,7 @@ export class LoginPlayerFormComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private dialog: MatDialog) { }
+    
 
   title = 'createPlayerForm';
   email: string = '';
@@ -70,8 +72,9 @@ export class LoginPlayerFormComponent implements OnInit {
   }
 
   async loginPlayer(player: any) {
+    console.log(apiUrl)
     try {
-      const response = await lastValueFrom(this.http.post<any>(`https://3000-idx-pokemongameapi-1725292582953.cluster-rcyheetymngt4qx5fpswua3ry4.cloudworkstations.dev/pokemon-api/login`, player, { withCredentials: true }));
+      const response = await lastValueFrom(this.http.post<any>(`${apiUrl}/login`, player, { withCredentials: true }));
       if (!response) return null;
       this.cookie = response.access_token;
       this.cookieService.set('jwt', response.access_token);

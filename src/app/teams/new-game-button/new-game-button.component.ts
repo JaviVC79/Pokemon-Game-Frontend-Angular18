@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { GameBattleService, GameStatus, NewGameResponse, Game } from '../../services/game-battle.service';
 
 interface Team {
   id: number;
@@ -14,16 +15,56 @@ interface Team {
   templateUrl: './new-game-button.component.html',
   styleUrl: './new-game-button.component.css'
 })
-export class NewGameButtonComponent {
+export class NewGameButtonComponent implements OnInit {
+  constructor(private gameBattleService: GameBattleService) { }
+  gameStatus: string = '';
+  ngOnInit(): void {
+    this.gameBattleService.gameStatus$.subscribe(gameStatus => {
+      this.gameStatus = gameStatus;
+    });
+  }
+
+
+  gameStatusTeams: any[] = [];
+  @Input() teams: Team[] | undefined;
   @Input() team: Team | undefined;
   @Input() teamId: number = 0;
   @Input() pokemons: any[] = [];
+  @Input() games: Game[] | null = [];
+  
 
-  startNewGame(team: Team) {
-    
-    console.log("New game started with team id:" + team.id +" user_id: "+team.user_id + " name: "+team.name+" playerId: "+team.playerId)
+
+  /*async startNewGame(teamId: number) {
+    const newGameResponse: NewGameResponse | null = await this.gameBattleService.startGame(teamId);
+    if (!newGameResponse) return;
+    if (newGameResponse.message = "waiting for another player, check later please") { 
+      this.gameBattleService.setGameStatus(GameStatus.waiting);
+      this.gameStatusTeams.push({teamId:teamId, gameStatus:GameStatus.waiting})
+    } else if(newGameResponse.message = "game started") {
+      this.gameBattleService.setGameStatus(GameStatus.inProgress);
+      this.gameStatusTeams.push({teamId:teamId, gameStatus:GameStatus.inProgress})
+    }
+  }*/
+  async startNewGame(teamId: number) {
+    const newGameResponse: NewGameResponse | null = await this.gameBattleService.startGame(teamId);
+    if (!newGameResponse) return;
+
+    if (newGameResponse.message === "waiting for another player, check later please") {
+      this.updateGameStatusTeams(teamId, GameStatus['waiting for another player']);
+    } else if (newGameResponse.message === "game started") {
+      this.updateGameStatusTeams(teamId, GameStatus.inProgress);
+    }
   }
 
+  private updateGameStatusTeams(teamId: number, status: GameStatus) {
+    this.gameBattleService.setGameStatus(status);
+    const existingTeam = this.gameStatusTeams.find(team => team.teamId === teamId);
+    if (existingTeam) {
+      existingTeam.gameStatus = status;
+    } else {
+      this.gameStatusTeams.push({ teamId: teamId, gameStatus: status });
+    }
+  }
 
 
 }

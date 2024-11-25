@@ -7,6 +7,9 @@ import { PopupNoDataComponent } from '../pop-ups/login-pop-ups/popup-no-data.com
 import { MatDialog } from '@angular/material/dialog';
 import { NgIf } from '@angular/common';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
+
+
 
 @Component({
   selector: 'createPlayerForm',
@@ -18,7 +21,7 @@ import { Router } from '@angular/router';
 export class createPlayerFormComponent {
 
   constructor(private http: HttpClient, private gameService: GameService, private dialog: MatDialog, private router: Router) { }
-
+  private apiUrl = environment.apiUrl;
   title = 'createPlayerForm';
   email: string = '';
   nickName: string = '';
@@ -103,7 +106,7 @@ export class createPlayerFormComponent {
   async singUp(newPlayer: any) {
     const body = newPlayer;
     try {
-      const response = await lastValueFrom(this.http.post<any>(`https://3000-idx-pokemongameapi-1725292582953.cluster-rcyheetymngt4qx5fpswua3ry4.cloudworkstations.dev/pokemon-api`, body, { withCredentials: true }));
+      const response = await lastValueFrom(this.http.post<any>(`${this.apiUrl}`, body, { withCredentials: true }));
       if (!response) return null;
       this.router.navigateByUrl('/login')
       return response;

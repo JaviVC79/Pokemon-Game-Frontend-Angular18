@@ -11,10 +11,11 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from '../app/services/auth.service';
-import {VgCoreModule} from '@videogular/ngx-videogular/core';
-import {VgControlsModule} from '@videogular/ngx-videogular/controls';
-import {VgOverlayPlayModule} from '@videogular/ngx-videogular/overlay-play';
-import {VgBufferingModule} from '@videogular/ngx-videogular/buffering';
+import { VgCoreModule } from '@videogular/ngx-videogular/core';
+import { VgControlsModule } from '@videogular/ngx-videogular/controls';
+import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
+import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
+//import { WebSocketService } from './services/websockets.service';
 
 
 @Component({
@@ -34,20 +35,26 @@ import {VgBufferingModule} from '@videogular/ngx-videogular/buffering';
 export class AppComponent implements OnInit {
   title = 'myapp';
   isLogin: boolean | null = null;
-  
-  constructor(private authService: AuthService, private router: Router) { }
+
+  constructor(private authService: AuthService, private router: Router, /*private webSocketService: WebSocketService*/) { }
 
   ngOnInit() {
     this.authService.loggedIn$.subscribe((status) => {
       this.isLogin = status;
     });
+    /*this.webSocketService.getMessage().subscribe((message: string) => {
+      console.log('Received message:', message);
+    });*/
   }
   ngDoCheck() {
     this.isLogin = this.authService.isLogin();
   }
-  logOut(){
+  logOut() {
     this.authService.logout();
     this.router.navigateByUrl('/login');
   }
+  /*sendMessage(): void {
+    this.webSocketService.sendMessage('Hello from Angular!');
+  }*/
 
 }

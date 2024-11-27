@@ -72,12 +72,13 @@ export class LoginPlayerFormComponent implements OnInit {
   }
 
   async loginPlayer(player: any) {
-    console.log(apiUrl)
+    //console.log(apiUrl)
     try {
       const response = await lastValueFrom(this.http.post<any>(`${apiUrl}/login`, player, { withCredentials: true }));
       if (!response) return null;
       this.cookie = response.access_token;
       this.cookieService.set('jwt', response.access_token);
+      this.cookieService.set('user_id', response.user_id);
       return response;
     } catch (error) {
       this.openUnathorizedLoginPopup();

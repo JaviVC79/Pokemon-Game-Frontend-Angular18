@@ -5,6 +5,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { environment } from "../../environments/environment";
 
 export enum GameStatus {
+    'notStarted' = 'notStarted',
     'waiting for another player' = 'waiting for another player',
     'inProgress' = 'inProgress',
     'finished' = 'finished'

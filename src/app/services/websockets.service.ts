@@ -1,18 +1,51 @@
 import { Injectable } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
-import { Observable } from 'rxjs';
+import { io, Socket } from 'socket.io-client';
+import { fromEvent, Observable } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebSocketService {
-  constructor(private socket: Socket) {}
+  
+  private socket: Socket;
+  private currentRoom: string = "";
 
-  sendMessage(msg: string): void {
-    this.socket.emit('message', msg);
+  constructor(private cookieService: CookieService) {
+    const user_id = this.cookieService.get('user_id');
+    this.socket = io('https://3000-idx-pokemongameapi-1725292582953.cluster-rcyheetymngt4qx5fpswua3ry4.cloudworkstations.dev', {
+      withCredentials: true,
+      extraHeaders: {
+        'user_id': user_id
+      }
+    });
+  }
+  
+  joinRoom(room: string) {
+    this.currentRoom = room;
+    this.socket.emit('joinRoom', room);
   }
 
-  getMessage(): Observable<string> {
-    return this.socket.fromEvent<string>('message');
+  saveGame(room: string, state: any) {
+    this.socket.emit('saveGame', { room: this.currentRoom, state });
+  }
+
+  onMessage(): Observable<any> {
+    return fromEvent(this.socket, 'sendMessage');
+  }
+
+  onRestoreGame(): Observable<any> {
+    return fromEvent(this.socket, 'restoreGame');
+  }
+
+  onJoinRoom(): Observable<any> {
+    return fromEvent(this.socket, 'joinRoom');
+  }
+
+  sendMessage(room: string, message: string) {
+    this.socket.emit('sendMessage', { room: this.currentRoom, message });
   }
 }
+
+
+

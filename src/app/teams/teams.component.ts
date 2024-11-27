@@ -81,7 +81,6 @@ export class TeamsComponent implements OnInit {
 
   async getGames() {
     const games: Game[] | null = await this.gameBattleService.getGames();
-    console.log(games)
     this.games = games;
   }
 

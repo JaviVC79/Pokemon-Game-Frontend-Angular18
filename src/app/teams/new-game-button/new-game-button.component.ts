@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GameBattleService, GameStatus, NewGameResponse, Game } from '../../services/game-battle.service';
 import { WebSocketService } from '../../services/websockets.service';
+import { CookieService } from 'ngx-cookie-service';
 
 interface Team {
   id: number;
@@ -31,7 +32,9 @@ export interface GameState {
   styleUrl: './new-game-button.component.css'
 })
 export class NewGameButtonComponent implements OnInit {
-  constructor(private gameBattleService: GameBattleService, private webSocketService: WebSocketService) { }
+  constructor(private gameBattleService: GameBattleService,
+    private cookieService: CookieService, 
+    private webSocketService: WebSocketService) { }
 
   ngOnInit(): void {
     this.gameBattleService.gameStatus$.subscribe(gameStatus => {
@@ -77,33 +80,25 @@ export class NewGameButtonComponent implements OnInit {
   @Input() games: Game[] | null = [];
   newGameData: any;
 
-  sendMessage() {
-    console.log('Sending test message');
-    this.webSocketService.sendMessage('testRoom', 'Hello, WebSocket!');
+  sendMessage(room: string = 'testRoom', message: string = 'Hello, WebSocket!') {
+    console.log('Sending test message ' + message);
+    this.webSocketService.sendMessage(room, message);
   }
   async startNewGame(team: Team) {
     const newGameResponse: NewGameResponse | null = await this.gameBattleService.startGame(team.id);
     this.newGameData = newGameResponse;
     if (!newGameResponse) return;
+    const gameId: string = newGameResponse.gameId.toString();
     if (newGameResponse.message === "waiting for another player, check later please") {
       this.updateGameStatusTeams(team.id, GameStatus['waiting for another player']);
-      this.webSocketService.joinRoom("1");
+      this.webSocketService.joinRoom(gameId);
+      this.cookieService.set('room', gameId);
     } else if (newGameResponse.message === "game started") {
       this.updateGameStatusTeams(team.id, GameStatus.inProgress);
-      this.webSocketService.joinRoom("1");
+      this.webSocketService.joinRoom(gameId);
+      this.cookieService.set('room', gameId);
     }
   }
-  /*async startNewGame(team: Team) {
-    const newGameResponse: NewGameResponse | null = await this.gameBattleService.startGame(team.id);
-    if (!newGameResponse) return;
-
-    if (newGameResponse.message === "waiting for another player, check later please") {
-      this.updateGameStatusTeams(team.id, GameStatus['waiting for another player']);
-    } else if (newGameResponse.message === "game started") {
-      this.updateGameStatusTeams(team.id, GameStatus.inProgress);
-      this.webSocketService.sendStartGame({ team: team, gameStatus: GameStatus.inProgress, newGameResponse: newGameResponse });
-    }
-  }*/
 
   private updateGameStatusTeams(teamId: number, status: GameStatus) {
     this.gameBattleService.setGameStatus(status);

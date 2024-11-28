@@ -7,7 +7,9 @@ import { CookieService } from 'ngx-cookie-service';
   providedIn: 'root'
 })
 export class WebSocketService {
-  
+
+
+
   private socket: Socket;
   private currentRoom: string = "";
 
@@ -21,6 +23,10 @@ export class WebSocketService {
     });
   }
   
+  connect() {
+    this.socket.connect();
+  }
+
   joinRoom(room: string) {
     this.currentRoom = room;
     this.socket.emit('joinRoom', room);
@@ -45,6 +51,11 @@ export class WebSocketService {
   sendMessage(room: string, message: string) {
     this.socket.emit('sendMessage', { room: this.currentRoom, message });
   }
+
+  disconnect() {
+    this.socket.disconnect()
+  }
+
 }
 
 

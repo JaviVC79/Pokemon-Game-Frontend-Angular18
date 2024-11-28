@@ -9,21 +9,27 @@ import { Router } from '@angular/router';
 import { PopupNoDataComponent } from '../pop-ups/login-pop-ups/popup-no-data.component';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupUnauthorizedLoginComponent } from '../pop-ups/login-pop-ups/popup-unauthorized-login.component';
+import { WebSocketService } from '../services/websockets.service';
+import { GameBattleService } from '../services/game-battle.service';
 import { environment } from '../../environments/environment';
 const apiUrl = environment.apiUrl;
+
 @Component({
   selector: 'app-login-player-form',
   standalone: true,
   imports: [FormsModule, NgIf],
   templateUrl: './login-player-form.component.html',
 })
+
 export class LoginPlayerFormComponent implements OnInit {
   constructor(private http: HttpClient,
     private cookieService: CookieService,
     private authService: AuthService,
     private router: Router,
-    private dialog: MatDialog) { }
-    
+    private dialog: MatDialog,
+    private webSocketService: WebSocketService,
+    private gameBattleService: GameBattleService) { }
+
 
   title = 'createPlayerForm';
   email: string = '';
@@ -72,13 +78,19 @@ export class LoginPlayerFormComponent implements OnInit {
   }
 
   async loginPlayer(player: any) {
-    //console.log(apiUrl)
     try {
       const response = await lastValueFrom(this.http.post<any>(`${apiUrl}/login`, player, { withCredentials: true }));
       if (!response) return null;
       this.cookie = response.access_token;
       this.cookieService.set('jwt', response.access_token);
       this.cookieService.set('user_id', response.user_id);
+      const game = await this.gameBattleService.startGame(response.user_id);
+      if (game && game.message === "you already have a started game") {
+        const gameId: string = game.gameId.toString();
+        this.webSocketService.connect();
+        this.webSocketService.joinRoom(gameId);
+        this.cookieService.set('room', gameId);
+      }
       return response;
     } catch (error) {
       this.openUnathorizedLoginPopup();

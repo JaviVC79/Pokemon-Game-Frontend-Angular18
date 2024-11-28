@@ -28,7 +28,7 @@ import { WebSocketService } from './services/websockets.service';
     VgOverlayPlayModule,
     VgBufferingModule
   ],
-  providers: [CookieService, AuthService],
+  providers: [CookieService],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
@@ -42,9 +42,6 @@ export class AppComponent implements OnInit {
     this.authService.loggedIn$.subscribe((status) => {
       this.isLogin = status;
     });
-    /*this.webSocketService.getMessage().subscribe((message: string) => {
-      console.log('Received message:', message);
-    });*/
   }
   ngDoCheck() {
     this.isLogin = this.authService.isLogin();

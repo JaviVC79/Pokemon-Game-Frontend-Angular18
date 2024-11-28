@@ -14,7 +14,9 @@ export enum GameStatus {
 export interface NewGameResponse {
     status: number;
     message: string;
+    gameId: number
 }
+
 
 export interface Game {
     id: number;
@@ -23,7 +25,7 @@ export interface Game {
     winnerId?: number;
     user_id1?: string;
     user_id2?: string;
-  }
+}
 
 @Injectable({
     providedIn: 'root',
@@ -65,7 +67,7 @@ export class GameBattleService {
         }
         const url = `${this.apiUrl}/startGame`
         try {
-            const response : any  = await lastValueFrom(this.http.post<Array<any>>(url, body, {
+            const response: any = await lastValueFrom(this.http.post<Array<any>>(url, body, {
                 withCredentials: true,
                 headers: {
                     authorization: `Bearer ${jwt}`
@@ -83,7 +85,7 @@ export class GameBattleService {
         const jwt = this.cookieService.get('jwt');
         const url = `${this.apiUrl}/games`
         try {
-            const response : any  = await lastValueFrom(this.http.get(url, {
+            const response: any = await lastValueFrom(this.http.get(url, {
                 withCredentials: true,
                 headers: {
                     authorization: `Bearer ${jwt}`

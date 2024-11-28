@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
+import { WebSocketService } from './websockets.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private cookieService: CookieService) { }
+  constructor(private cookieService: CookieService, private webSocketService: WebSocketService) { }
   private loggedInSubject = new BehaviorSubject<boolean>(false);
   loggedIn$ = this.loggedInSubject.asObservable();
 
@@ -25,8 +26,10 @@ export class AuthService {
   }
 
   logout() {
+    this.webSocketService.disconnect();
     this.cookieService.delete('jwt');
     this.cookieService.delete('user_id');
+    this.cookieService.delete('room');
     this.loggedInSubject.next(false);
   }
 }

@@ -1,0 +1,8 @@
+<button mat-fab extended
+    class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10 ml-4" (click)="defense()">
+    Defense your: {{pokemon.name.toUpperCase()}}
+</button>
+
+@if(defenseResponse != null && defenseResponse.message === "Your opponent is not connected"){
+<p class="rounded-lg p-2 bg-red-500 mb-10 ml-4">Your opponent is not connected</p>
+}

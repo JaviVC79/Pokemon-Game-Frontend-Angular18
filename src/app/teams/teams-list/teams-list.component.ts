@@ -4,11 +4,12 @@ import { AttackButtonComponent } from "../attack-button/attack-button.component"
 import { TeamService } from '../../services/team.service';
 import { GameBattleService } from '../../services/game-battle.service';
 import { Game } from '../../services/game-battle.service';
+import { DefenseButtonComponent } from '../defense-button/defense-button.component';
 
 @Component({
   selector: 'app-teams-list',
   standalone: true,
-  imports: [NgFor, NgIf, AttackButtonComponent],
+  imports: [NgFor, NgIf, AttackButtonComponent, DefenseButtonComponent],
   templateUrl: './teams-list.component.html',
   styleUrls: ['./teams-list.component.css']
 })

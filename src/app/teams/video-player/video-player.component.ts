@@ -7,7 +7,6 @@ import { VgCoreModule } from '@videogular/ngx-videogular/core';
   standalone: true,
   imports: [VgCoreModule],
   templateUrl: './video-player.component.html',
-  styleUrls: ['./video-player.component.css']
 })
 export class VideoPlayerComponent {
 

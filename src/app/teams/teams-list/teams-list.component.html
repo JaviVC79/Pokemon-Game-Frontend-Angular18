@@ -2,10 +2,11 @@
     <div *ngIf="team.id === pokemon.teamId" class="border border-solid border-slate-500 rounded-lg m-2 w-full bg-white"
         (click)="getPokemonId(pokemon.id)">
         <div class="justify-items-start">
-            <button *ngIf="pokemon.id === pokemonId" mat-fab extended
+            <button *ngIf="!(games && games[0]) && pokemon.id === pokemonId" mat-fab extended
                 class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 my-2 ml-4"
                 (click)="callRemovePokemon(pokemon.id)">Remove: {{pokemon.name}}</button>
-            <app-attack-button *ngIf="pokemon.id === pokemonId" [pokemon]="pokemon" (pokemons)="pokemons!" [team]="team" [games]="games" />
+            <app-attack-button *ngIf="games && games[0] && pokemon.id === pokemonId" [pokemon]="pokemon" (pokemons)="pokemons!" [team]="team" [games]="games" />
+            <app-defense-button *ngIf="games && games[0] && pokemon.id === pokemonId" [pokemon]="pokemon" (pokemons)="pokemons!" [team]="team" [games]="games" />
             <p class="m-2"><strong>Name:</strong> {{pokemon.name.toUpperCase()}}</p>
             <p class="m-2"><strong>Abilities:</strong> {{pokemon.abilities}}</p>
             <p class="m-2"><strong>Types:</strong> {{pokemon.types}}</p>

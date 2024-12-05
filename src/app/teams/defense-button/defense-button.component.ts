@@ -4,12 +4,13 @@ import { TeamService } from '../../services/team.service';
 import { GameService } from '../../prueba/prueba.logicGame.service';
 
 @Component({
-  selector: 'app-attack-button',
+  selector: 'app-defense-button',
   standalone: true,
   imports: [],
-  templateUrl: './attack-button.component.html',
+  templateUrl: './defense-button.component.html',
 })
-export class AttackButtonComponent implements OnInit {
+export class DefenseButtonComponent implements OnInit{
+
   constructor(private webSocketService: WebSocketService,
     private teamService: TeamService,
     private gameService: GameService
@@ -19,33 +20,26 @@ export class AttackButtonComponent implements OnInit {
     this.teamService.pokemons$.subscribe(pokemons => {
       this.pokemons = pokemons;
     });
-    this.webSocketService.onAttack().subscribe(async (message: any) => {
-      this.attackResponse = message;
-      if (!(this.attackResponse != null && this.attackResponse.message === "Your opponent is not connected")) {
+    this.webSocketService.onDefense().subscribe(async (message: any) => {
+      this.defenseResponse = message;
+      console.log(this.defenseResponse.message)
+      if (!(this.defenseResponse != null && this.defenseResponse.message === "Your opponent is not connected")) {
         const pokemons = await this.gameService.getPlayerPokemons();
         this.pokemons = pokemons.pokemonsAndStats.sort((a: any, b: any) => a.teamId - b.teamId);
         this.teamService.setPokemons(this.pokemons);
       }
     });
   }
-
   @Input() pokemon: any = null;
   pokemons: any[] = [];
-  attackResponse: any = null;
+  defenseResponse: any = null;
   @Input() team?: any;
   @Input() games?: any;
 
 
-  sendMessage() {
-    this.webSocketService.sendMessage("a ver si funciona")
-    console.log("en sendMesage")
+  defense() {
+    this.webSocketService.defense(this.pokemon);
   }
 
-  attack() {
-    this.webSocketService.attack(this.pokemon);
-  }
+
 }
-
-
-
-

@@ -29,7 +29,6 @@ export interface GameState {
   selector: 'app-new-game-button',
   standalone: true,
   templateUrl: './new-game-button.component.html',
-  styleUrl: './new-game-button.component.css'
 })
 export class NewGameButtonComponent implements OnInit {
   constructor(private gameBattleService: GameBattleService,
@@ -54,7 +53,6 @@ export class NewGameButtonComponent implements OnInit {
 
   restoreGame(state: GameState) {
     this.gameState = state;
-    // Aquí puedes añadir la lógica para actualizar la UI con el estado restaurado
     console.log('Game state restored:', this.gameState);
   }
 

@@ -52,7 +52,6 @@ interface Increase {
 @Component({
   selector: 'app-prueba',
   templateUrl: './prueba.component.html',
-  styleUrls: ['./prueba.component.css'],
   standalone: true,
   imports: [CommonModule,
     MatSlideToggleModule, MatIconModule, MatDividerModule, MatButtonModule, MatToolbarModule, MatSidenavModule, MatListModule, MatMenuModule,

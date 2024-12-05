@@ -13,7 +13,6 @@ import { TeamService } from '../services/team.service';
   standalone: true,
   imports: [FormsModule, NgIf, MatDialogModule],
   templateUrl: './add-team-form.component.html',
-  styleUrl: './add-team-form.component.css'
 })
 export class AddTeamFormComponent implements OnInit {
   constructor(private gameService: GameService, private router: Router, private dialog: MatDialog, private teamService: TeamService) { }

@@ -9,7 +9,6 @@ import { PokemonService } from '../services/api.service';
   standalone: true,
   imports: [MatIconModule, MatButtonModule],
   templateUrl: './back-forward-buttons.component.html',
-  styleUrl: './back-forward-buttons.component.css'
 })
 export class BackForwardButtonsComponent {
   @Output() offsetChange = new EventEmitter<number>();

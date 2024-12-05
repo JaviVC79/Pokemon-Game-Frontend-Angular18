@@ -7,12 +7,15 @@
     <div class="justify-items-start mt-10 rounded-lg border border-solid border-slate-500">
         <button mat-fab extended class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10"
             (click)="selectTeam(team.id,team.name)">{{team.name}}</button>
-        <button *ngIf="team.id === teamId" mat-fab extended
+        <button *ngIf="team.id === teamId && !(battleTeam1 === teamId || battleTeam2 === teamId)" mat-fab extended
             class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10 ml-4"
             (click)="removeTeam(team.id)">Remove: {{team.name}}</button>
-        <button *ngIf="team.id === teamId" mat-fab extended
+        <button *ngIf="team.id === teamId && !(battleTeam1 === teamId || battleTeam2 === teamId)" mat-fab extended
             class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10 ml-4" (click)="gotoPokemons()">Add
             new pokemon to: {{team.name}}</button>
+        <p class="rounded-lg p-2 bg-red-400 mb-10 ml-4"
+            *ngIf="team.id === teamId && (battleTeam1 === teamId || battleTeam2 === teamId)">You have a started game
+            with this team</p>
         <app-teams-list [teamId]="teamId" [pokemonId]="pokemonId" [team]="team" [games]="games"
             [removePokemon]="removePokemon.bind(this)" />
     </div>
@@ -21,14 +24,17 @@
     <div class="justify-items-start mt-10 rounded-lg border border-solid border-slate-500">
         <button mat-fab extended class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10"
             (click)="selectCompletedTeam(team.id)">{{team.name}}</button>
-      
         <button *ngIf="team.id === teamId && !(battleTeam1 === teamId || battleTeam2 === teamId)" mat-fab extended
             class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10 ml-4"
             (click)="removeTeam(team.id)">Remove: {{team.name}}</button>
-        <button *ngIf="team.id === teamId && !(battleTeam1 === teamId || battleTeam2 === teamId)" mat-fab extended class="rounded-lg p-2 bg-red-300 mb-10 ml-4">{{team.name}}
+        <button *ngIf="team.id === teamId && !(battleTeam1 === teamId || battleTeam2 === teamId)" mat-fab extended
+            class="rounded-lg p-2 bg-red-300 mb-10 ml-4">{{team.name}}
             is no longer accepting new members.</button>
-        <app-new-game-button *ngIf="team.id === teamId && !(battleTeam1 === teamId || battleTeam2 === teamId)" [team]="team" [teamId]="teamId" [pokemons]="pokemons" [games]="games" [teams]="teams" />
-        <p class="rounded-lg p-2 bg-red-400 mb-10 ml-4" *ngIf="team.id === teamId && (battleTeam1 === teamId || battleTeam2 === teamId)" >you have a started game with this team</p>
+        <app-new-game-button *ngIf="team.id === teamId && !(battleTeam1 === teamId || battleTeam2 === teamId || (games && games[0]))"
+            [team]="team" [teamId]="teamId" [pokemons]="pokemons" [games]="games" [teams]="teams" />
+        <p class="rounded-lg p-2 bg-red-400 mb-10 ml-4"
+            *ngIf="team.id === teamId && (battleTeam1 === teamId || battleTeam2 === teamId)">You have a started game
+            with this team</p>
         <app-teams-list [teamId]="teamId" [pokemonId]="pokemonId" [team]="team"
             [removePokemon]="removePokemon.bind(this)" />
     </div>

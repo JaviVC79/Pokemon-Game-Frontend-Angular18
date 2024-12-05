@@ -19,14 +19,11 @@ export interface Team {
 }
 
 
-
-
 @Component({
   selector: 'app-teams',
   standalone: true,
   imports: [NgFor, NgIf, AddTeamFormComponent, VgCoreModule, VideoPlayerComponent, TeamsListComponent, NewGameButtonComponent],
   templateUrl: './teams.component.html',
-  styleUrl: './teams.component.css'
 })
 
 export class TeamsComponent implements OnInit {
@@ -101,7 +98,6 @@ export class TeamsComponent implements OnInit {
 
   async getGames() {
     const games: Game[] | null = await this.gameBattleService.getGames();
-    console.log("En games",games)
     return games;
   }
 

@@ -9,8 +9,6 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class WebSocketService {
 
-
-
   private socket: Socket;
   private currentRoom: string = "";
   private isConnected = false;
@@ -75,6 +73,16 @@ export class WebSocketService {
 
   onAttack(): Observable<any> {
     return fromEvent(this.socket, 'attack');
+  }
+
+  defense(message: any) {
+    const room = this.cookieService.get('room');
+    this.currentRoom = room;
+    this.socket.emit('defense', { room: this.currentRoom, message });
+  }
+
+  onDefense(): Observable<any> {
+    return fromEvent(this.socket, 'defense');
   }
 
 }

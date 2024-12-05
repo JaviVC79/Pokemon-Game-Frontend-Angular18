@@ -33,7 +33,7 @@ export interface GameState {
 })
 export class NewGameButtonComponent implements OnInit {
   constructor(private gameBattleService: GameBattleService,
-    private cookieService: CookieService, 
+    private cookieService: CookieService,
     private webSocketService: WebSocketService) { }
 
   ngOnInit(): void {
@@ -41,7 +41,7 @@ export class NewGameButtonComponent implements OnInit {
       this.gameStatus = gameStatus;
     });
     this.webSocketService.onJoinRoom().subscribe((room: string) => {
-      this.webSocketService.joinRoom(room);
+      this.webSocketService.joinRoom();
     });
 
     this.webSocketService.onRestoreGame().subscribe((state: GameState) => {
@@ -59,7 +59,7 @@ export class NewGameButtonComponent implements OnInit {
   }
 
   saveGame() {
-    this.webSocketService.saveGame('room1', this.gameState);
+    this.webSocketService.saveGame(this.gameState);
   }
 
   gameState: GameState = {
@@ -80,27 +80,35 @@ export class NewGameButtonComponent implements OnInit {
   @Input() games: Game[] | null = [];
   newGameData: any;
 
-  sendMessage(room: string = 'testRoom', message: string = 'Hello, WebSocket!') {
-    console.log('Sending test message ' + message);
-    this.webSocketService.sendMessage(room, message);
+
+  sendMessage(room: string = 'testRoom', message: string = '') {
+    const element = document.getElementById('test-input') as HTMLInputElement;
+    message = element.value;
+    if (message == "") return;
+    this.webSocketService.sendMessage(message);
   }
+
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') { this.sendMessage(this.newGameData?.gameId.toString()); }
+  }
+
   async startNewGame(team: Team) {
     const newGameResponse: NewGameResponse | null = await this.gameBattleService.startGame(team.id);
     this.newGameData = newGameResponse;
     if (!newGameResponse) return;
     const gameId: string = newGameResponse.gameId.toString();
     if (newGameResponse.message === "waiting for another player, check later please") {
-      this.updateGameStatusTeams(team.id, GameStatus['waiting for another player']);
-      this.webSocketService.joinRoom(gameId);
-      this.cookieService.set('room', gameId);
+      this.updateGameStatusTeams(team.id, GameStatus['waiting for another player'], gameId);
+      this.webSocketService.connect();
+      this.webSocketService.joinRoom();
     } else if (newGameResponse.message === "game started") {
-      this.updateGameStatusTeams(team.id, GameStatus.inProgress);
-      this.webSocketService.joinRoom(gameId);
-      this.cookieService.set('room', gameId);
+      this.updateGameStatusTeams(team.id, GameStatus.inProgress, gameId);
+      this.webSocketService.connect();
+      this.webSocketService.joinRoom();
     }
   }
 
-  private updateGameStatusTeams(teamId: number, status: GameStatus) {
+  private updateGameStatusTeams(teamId: number, status: GameStatus, gameId: string) {
     this.gameBattleService.setGameStatus(status);
     const existingTeam = this.gameStatusTeams.find(team => team.teamId === teamId);
     if (existingTeam) {
@@ -108,6 +116,8 @@ export class NewGameButtonComponent implements OnInit {
     } else {
       this.gameStatusTeams.push({ teamId: teamId, gameStatus: status });
     }
+    this.cookieService.set('room', gameId);
+    this.webSocketService.joinRoom();
   }
 
 

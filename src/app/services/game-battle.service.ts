@@ -31,6 +31,7 @@ export interface Game {
     providedIn: 'root',
 })
 export class GameBattleService {
+
     constructor(private http: HttpClient, private cookieService: CookieService) { }
     private apiUrl = environment.apiUrl;
 
@@ -98,5 +99,41 @@ export class GameBattleService {
             return error
         }
     }
+    async getPokemonsChanges(){
+        const jwt = this.cookieService.get('jwt');
+        const url = `${this.apiUrl}/pokemons`
+        try {
+            const response: any = await lastValueFrom(this.http.get(url, {
+                withCredentials: true,
+                headers: {
+                    authorization: `Bearer ${jwt}`
+                }
+            }));
+            if (!response) return null;
+            return response;
+        } catch (error: any) {
+            console.log(error);
+            return error
+        }
+    }
+
+    /*async getPokemonsByTeam(teamId:any){
+        const jwt = this.cookieService.get('jwt');
+        const url = `${this.apiUrl}/pokemonsByTeam/${teamId}`
+        try {
+            const response: any = await lastValueFrom(this.http.get(url, {
+                withCredentials: true,
+                headers: {
+                    authorization: `Bearer ${jwt}`
+                }
+            }));
+            if (!response) return null;
+            return response;
+        } catch (error: any) {
+            console.log(error);
+            return error
+        }
+
+    }*/
 
 }

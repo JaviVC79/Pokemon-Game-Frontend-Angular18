@@ -12,6 +12,7 @@ import { NewGameButtonComponent } from "./new-game-button/new-game-button.compon
 import { Game } from '../services/game-battle.service';
 import { GameBattleService } from '../services/game-battle.service';
 
+
 export interface Team {
   id: number;
   name: string;
@@ -38,23 +39,34 @@ export class TeamsComponent implements OnInit {
   completedTeams: any[] = [];
   incompletedTeams: any[] = [];
   games: Game[] | null = [];
+  battleTeam1: number = 0;
+  battleTeam2: number = 0;
 
-  constructor(private gameService: GameService, 
+  constructor(private gameService: GameService,
     private gameBattleService: GameBattleService,
-    private teamService: TeamService, private router: Router) { }
+    private teamService: TeamService, private router: Router
+  ) { }
 
   async ngOnInit() {
-    await this.getTeams();
-    await this.getPlayerPokemons();
-    await this.getGames();
+    try {
+      await Promise.all([this.getTeams(), this.getPlayerPokemons()]);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+    this.teamService.pokemons$.subscribe(pokemons => {
+      this.pokemons = pokemons;
+    });
   }
 
   async onTeamsChange(newTeams: any[]) {
     this.teams = newTeams;
-    await this.getTeams();
-    await this.getPlayerPokemons();
+    try {
+      await Promise.all([this.getTeams(), this.getPlayerPokemons()]);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   }
-  
+
   async getTeams() {
     const teams: TeamsResponse | null = await this.gameService.getTeams();
     this.teams = teams?.teams;
@@ -66,6 +78,7 @@ export class TeamsComponent implements OnInit {
     if (pokemons?.pokemonsAndStats) {
       this.pokemons = pokemons.pokemonsAndStats.sort((a: any, b: any) => a.teamId - b.teamId);
       // Contar las ocurrencias de cada teamId
+      this.teamService.setPokemons(this.pokemons);
       const teamIdCounts = this.pokemons.reduce((acc, pokemon) => {
         acc[pokemon.teamId] = (acc[pokemon.teamId] || 0) + 1;
         return acc;
@@ -75,13 +88,21 @@ export class TeamsComponent implements OnInit {
       this.completedTeams = frequentTeamIds.map(teamId => this.teams.find((team: any) => team.id === parseInt(teamId)));
       this.incompletedTeams = [...this.teams].filter(team => !frequentTeamIds.includes(team.id.toString()));
       this.completedTeamsId = frequentTeamIds;
+      this.games = await this.getGames();
+      if (this.games && this.games[0]) {
+        this.completedTeamsId.push(this.games[0].player1TeamId);
+        this.completedTeamsId.push(this.games[0].player2TeamId);
+        this.battleTeam1 = this.games![0].player1TeamId!;
+        this.battleTeam2 = this.games![0].player2TeamId!;
+      }
       this.teamService.setPokemonsInTeam(this.completedTeamsId);
     }
   }
 
   async getGames() {
     const games: Game[] | null = await this.gameBattleService.getGames();
-    this.games = games;
+    console.log("En games",games)
+    return games;
   }
 
   async removeTeam(teamId: number) {

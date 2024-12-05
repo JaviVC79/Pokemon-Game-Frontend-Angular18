@@ -84,12 +84,15 @@ export class LoginPlayerFormComponent implements OnInit {
       this.cookie = response.access_token;
       this.cookieService.set('jwt', response.access_token);
       this.cookieService.set('user_id', response.user_id);
-      const game = await this.gameBattleService.startGame(response.user_id);
-      if (game && game.message === "you already have a started game") {
-        const gameId: string = game.gameId.toString();
-        this.webSocketService.connect();
-        this.webSocketService.joinRoom(gameId);
+      const game = await this.gameBattleService.getGames()
+      console.log("loginPlayer",game)
+      //const game = await this.gameBattleService.startGame(response.user_id);
+      if (game!.length>0) {
+        const gameId: string = game![0].id.toString();
         this.cookieService.set('room', gameId);
+        this.webSocketService.connect();
+        this.webSocketService.joinRoom();
+        
       }
       return response;
     } catch (error) {

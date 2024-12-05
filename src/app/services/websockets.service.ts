@@ -3,6 +3,7 @@ import { io, Socket } from 'socket.io-client';
 import { fromEvent, Observable } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,6 +13,7 @@ export class WebSocketService {
 
   private socket: Socket;
   private currentRoom: string = "";
+  private isConnected = false;
 
   constructor(private cookieService: CookieService) {
     const user_id = this.cookieService.get('user_id');
@@ -22,18 +24,24 @@ export class WebSocketService {
       }
     });
   }
-  
+
   connect() {
-    this.socket.connect();
+    if (!this.isConnected) {
+      this.socket.connect();
+      this.isConnected = true;
+    }
   }
 
-  joinRoom(room: string) {
+  joinRoom() {
+    const room = this.cookieService.get('room');
     this.currentRoom = room;
     this.socket.emit('joinRoom', room);
   }
 
-  saveGame(room: string, state: any) {
-    this.socket.emit('saveGame', { room: this.currentRoom, state });
+  saveGame(state: any) {
+    const room = this.cookieService.get('room');
+    this.currentRoom = room;
+    this.socket.emit('saveGame', { room: room, state });
   }
 
   onMessage(): Observable<any> {
@@ -48,12 +56,25 @@ export class WebSocketService {
     return fromEvent(this.socket, 'joinRoom');
   }
 
-  sendMessage(room: string, message: string) {
-    this.socket.emit('sendMessage', { room: this.currentRoom, message });
+  sendMessage(message: string) {
+    const room = this.cookieService.get('room');
+    this.currentRoom = room;
+    this.socket.emit('sendMessage', { room: room, message });
   }
 
   disconnect() {
     this.socket.disconnect()
+    this.isConnected = false;
+  }
+
+  attack(message: any) {
+    const room = this.cookieService.get('room');
+    this.currentRoom = room;
+    this.socket.emit('attack', { room: this.currentRoom, message });
+  }
+
+  onAttack(): Observable<any> {
+    return fromEvent(this.socket, 'attack');
   }
 
 }

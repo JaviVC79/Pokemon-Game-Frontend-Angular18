@@ -17,6 +17,8 @@ export class TeamService {
   teams$ = this.teamsSubject.asObservable();
   private pokemonsInTeamSubject = new BehaviorSubject<any>([]);
   pokemonsInTeam$ = this.pokemonsInTeamSubject.asObservable();
+  private pokemonsSubject = new BehaviorSubject<any>([]);
+  pokemons$ = this.pokemonsSubject.asObservable();
   
   setTeamId(teamId: number, teamName: string) {
     const team: Team = {
@@ -32,5 +34,9 @@ export class TeamService {
 
   setPokemonsInTeam(pokemons:any){
     this.pokemonsInTeamSubject.next(pokemons);
+  }
+
+  setPokemons(pokemons:any){
+    this.pokemonsSubject.next(pokemons);
   }
 }

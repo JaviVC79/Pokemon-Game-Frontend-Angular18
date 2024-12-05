@@ -13,7 +13,7 @@
         <button *ngIf="team.id === teamId" mat-fab extended
             class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10 ml-4" (click)="gotoPokemons()">Add
             new pokemon to: {{team.name}}</button>
-        <app-teams-list [pokemons]="pokemons" [teamId]="teamId" [pokemonId]="pokemonId" [team]="team"
+        <app-teams-list [teamId]="teamId" [pokemonId]="pokemonId" [team]="team" [games]="games"
             [removePokemon]="removePokemon.bind(this)" />
     </div>
 </ng-container>
@@ -21,13 +21,15 @@
     <div class="justify-items-start mt-10 rounded-lg border border-solid border-slate-500">
         <button mat-fab extended class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10"
             (click)="selectCompletedTeam(team.id)">{{team.name}}</button>
-        <button *ngIf="team.id === teamId" mat-fab extended
+      
+        <button *ngIf="team.id === teamId && !(battleTeam1 === teamId || battleTeam2 === teamId)" mat-fab extended
             class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10 ml-4"
             (click)="removeTeam(team.id)">Remove: {{team.name}}</button>
-        <button *ngIf="team.id === teamId" mat-fab extended class="rounded-lg p-2 bg-red-300 mb-10 ml-4">{{team.name}}
+        <button *ngIf="team.id === teamId && !(battleTeam1 === teamId || battleTeam2 === teamId)" mat-fab extended class="rounded-lg p-2 bg-red-300 mb-10 ml-4">{{team.name}}
             is no longer accepting new members.</button>
-        <app-new-game-button [team]="team" [teamId]="teamId" [pokemons]="pokemons" [games]="games" [teams]="teams" />
-        <app-teams-list [pokemons]="pokemons" [teamId]="teamId" [pokemonId]="pokemonId" [team]="team"
+        <app-new-game-button *ngIf="team.id === teamId && !(battleTeam1 === teamId || battleTeam2 === teamId)" [team]="team" [teamId]="teamId" [pokemons]="pokemons" [games]="games" [teams]="teams" />
+        <p class="rounded-lg p-2 bg-red-400 mb-10 ml-4" *ngIf="team.id === teamId && (battleTeam1 === teamId || battleTeam2 === teamId)" >you have a started game with this team</p>
+        <app-teams-list [teamId]="teamId" [pokemonId]="pokemonId" [team]="team"
             [removePokemon]="removePokemon.bind(this)" />
     </div>
 </ng-container>

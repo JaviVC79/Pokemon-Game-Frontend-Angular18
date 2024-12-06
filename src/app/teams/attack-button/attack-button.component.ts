@@ -28,7 +28,7 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
       this.pokemons = pokemons;
     });
     this.webSocketService.onAttack().pipe(takeUntil(this.destroy$)).subscribe(async (message: any) => {
-      this.attackResponse = message;
+      this.attackResponse = message.message;
       console.log(this.attackResponse.message);
       if (this.attackResponse.message === "It's not your turn") { this.turn = false; return; }
       if (!(this.attackResponse != null && this.attackResponse.message === "Your opponent is not connected")) {
@@ -37,6 +37,8 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
         this.teamService.setPokemons(this.pokemons);
         this.turn = true;
         this.attackMessage = this.attackResponse.message;
+        this.pokemonAttackName = message.pokemon.name
+        console.log(this.pokemonAttackName)
         this.openPokemonAttackPopup();
         return;
       }
@@ -55,6 +57,7 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
   @Input() games?: any;
   turn?: boolean;
   attackMessage?: string;
+  pokemonAttackName?:string;
 
   sendMessage() {
     this.webSocketService.sendMessage("a ver si funciona");
@@ -67,11 +70,11 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
 
   openPokemonAttackPopup() {
     this.dialog.open(PopupAttackDefenseComponent, {
-      data: { popupMessage: this.attackMessage },
+      data: { popupMessage: this.attackMessage, popupVideo: this.pokemonAttackName },
       position: { top: '30px', right: '80px' },
       disableClose: true,
-      width: '400px',
-      height: '100px'
+      width: '600px',
+      height: 'auto'
     });
   }
 }

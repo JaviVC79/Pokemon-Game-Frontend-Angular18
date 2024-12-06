@@ -28,7 +28,7 @@ export class DefenseButtonComponent implements OnInit, OnDestroy {
       this.pokemons = pokemons;
     });
     this.webSocketService.onDefense().pipe(takeUntil(this.destroy$)).subscribe(async (message: any) => {
-      this.defenseResponse = message;
+      this.defenseResponse = message.message;
       console.log(this.defenseResponse.message);
       if (this.defenseResponse.message === "It's not your turn") { this.turn = false; return; }
       if (!(this.defenseResponse != null && this.defenseResponse.message === "Your opponent is not connected")) {
@@ -37,6 +37,8 @@ export class DefenseButtonComponent implements OnInit, OnDestroy {
         this.teamService.setPokemons(this.pokemons);
         this.turn = true;
         this.defenseMessage = this.defenseResponse.message;
+        this.pokemonDefenseName = message.pokemon.name
+        console.log(this.pokemonDefenseName)
         this.openPokemonDefensePopup();
         return;
       }
@@ -55,18 +57,18 @@ export class DefenseButtonComponent implements OnInit, OnDestroy {
   @Input() games?: any;
   turn?: boolean;
   defenseMessage?: string;
-
+  pokemonDefenseName?: string;
   defense() {
     this.webSocketService.defense(this.pokemon);
   }
 
   openPokemonDefensePopup() {
     this.dialog.open(PopupAttackDefenseComponent, {
-      data: { popupMessage: this.defenseMessage },
+      data: { popupMessage: this.defenseMessage, popupVideo: this.pokemonDefenseName },
       position: { top: '30px', right: '80px' },
       disableClose: true,
-      width: '400px',
-      height: '100px'
+      width: '600px',
+      height: 'auto'
     });
   }
 }

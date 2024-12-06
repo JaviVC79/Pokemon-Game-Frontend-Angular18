@@ -6,3 +6,7 @@
 @if(attackResponse != null && attackResponse.message === "Your opponent is not connected"){
 <p class="rounded-lg p-2 bg-red-500 mb-10 ml-4">Your opponent is not connected</p>
 }
+@if(turn === false){
+    <p class="rounded-lg p-2 bg-red-500 mb-10 ml-4">It's not your turn, please wait for your opponent movement</p>
+}
+

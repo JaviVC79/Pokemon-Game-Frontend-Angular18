@@ -6,6 +6,7 @@ import { PopupAttackDefenseComponent } from '../../pop-ups/battle-pop-ups/popup-
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { CloudinaryService } from '../../services/cloudinary.service';
 
 @Component({
   selector: 'app-defense-button',
@@ -20,7 +21,8 @@ export class DefenseButtonComponent implements OnInit, OnDestroy {
     private webSocketService: WebSocketService,
     private teamService: TeamService,
     private gameService: GameService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cloudinaryService: CloudinaryService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -37,7 +39,8 @@ export class DefenseButtonComponent implements OnInit, OnDestroy {
         this.teamService.setPokemons(this.pokemons);
         this.turn = true;
         this.defenseMessage = this.defenseResponse.message;
-        this.pokemonDefenseName = message.pokemon.name
+        const pokemonDefenseName = message.pokemon.name
+        this.pokemonDefenseName = this.getVideo(`PokemonGame/${pokemonDefenseName!}`);
         console.log(this.pokemonDefenseName)
         this.openPokemonDefensePopup();
         return;
@@ -71,5 +74,9 @@ export class DefenseButtonComponent implements OnInit, OnDestroy {
       height: 'auto'
     });
   }
+  getVideo(publicId: string): string {
+    return this.cloudinaryService.getVideoUrl(publicId);
+  }
+
 }
 

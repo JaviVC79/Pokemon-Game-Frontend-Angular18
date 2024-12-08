@@ -75,6 +75,7 @@ export class GameBattleService {
                 }
             }));
             if (!response) return null;
+            console.log("respuesta a new game",response)
             return response;
         } catch (error: any) {
             console.log(error);

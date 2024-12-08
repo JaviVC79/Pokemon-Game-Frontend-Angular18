@@ -14,7 +14,7 @@ import { VgCoreModule } from '@videogular/ngx-videogular/core';
         <vg-player class="w-28 m-5 align-center">
         <video [vgMedia]="$any(media)" #media id="singleVideo" preload="auto" autoplay loop muted [playbackRate]="2"
             class="w-28">
-            <source src="/{{data.popupVideo ? data.popupVideo : 'squirtle'}}.mp4" type="video/mp4">
+            <source src="{{data.popupVideo ? data.popupVideo : '/squirtle.mp4'}}" type="video/mp4">
         </video>
     </vg-player>
     </div>

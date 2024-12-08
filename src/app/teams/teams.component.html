@@ -35,7 +35,7 @@
         <p class="rounded-lg p-2 bg-red-400 mb-10 ml-4"
             *ngIf="team.id === teamId && (battleTeam1 === teamId || battleTeam2 === teamId)">You have a started game
             with this team</p>
-        <app-teams-list [teamId]="teamId" [pokemonId]="pokemonId" [team]="team"
+        <app-teams-list [teamId]="teamId" [pokemonId]="pokemonId" [team]="team" [games]="games"
             [removePokemon]="removePokemon.bind(this)" />
     </div>
 </ng-container>

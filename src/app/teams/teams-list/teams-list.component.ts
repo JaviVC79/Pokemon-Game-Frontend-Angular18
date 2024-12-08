@@ -23,7 +23,7 @@ export class TeamsListComponent implements OnInit {
     this.teamService.pokemons$.subscribe(pokemons => {
       this.pokemons = pokemons;
     });
-
+    //console.log(this.games!)
   }
 
 

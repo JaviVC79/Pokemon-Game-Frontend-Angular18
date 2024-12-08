@@ -1,10 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
 import { StatsPokemonComponent } from '../stats-pokemon/stats-pokemon.component';
 import { TypesPokemonComponent } from '../types-pokemon/types-pokemon.component';
 import { AbilitiesPokemonComponent } from '../abilities-pokemon/abilities-pokemon.component';
 import { NgClass, NgFor, NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
 import { SelectPokemonPlayerComponent } from '../select-pokemon-player-buttons/select-pokemon-player-buttons.component';
 import { PokemonService } from '../services/api.service';
+import Atropos from 'atropos';
+import 'atropos/css'
 
 @Component({
   selector: 'app-details-pokemon',
@@ -18,8 +20,24 @@ import { PokemonService } from '../services/api.service';
   templateUrl: './details-pokemon.component.html',
   styleUrl: './details-pokemon.component.css'
 })
-export class DetailsPokemonComponent {
+export class DetailsPokemonComponent implements AfterViewInit{
   constructor(private pokemonService: PokemonService) { }
+  ngAfterViewInit(): void {
+    const myAtropos = Atropos({
+      el: '.card',
+      activeOffset: 40,
+      shadowScale: 1.05,
+      onEnter() {
+        
+      },
+      onLeave() {
+        
+      },
+      onRotate(x, y) {
+        
+      }
+    });
+  }
 
  
   isReverse: boolean = false;

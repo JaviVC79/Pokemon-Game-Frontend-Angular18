@@ -6,6 +6,8 @@ import { PopupAttackDefenseComponent } from '../../pop-ups/battle-pop-ups/popup-
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { CookieService } from 'ngx-cookie-service';
+import { CloudinaryService } from '../../services/cloudinary.service';
 
 @Component({
   selector: 'app-attack-button',
@@ -20,7 +22,9 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
     private webSocketService: WebSocketService,
     private teamService: TeamService,
     private gameService: GameService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cookieService: CookieService,
+    private cloudinaryService: CloudinaryService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -31,13 +35,17 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
       this.attackResponse = message.message;
       console.log(this.attackResponse.message);
       if (this.attackResponse.message === "It's not your turn") { this.turn = false; return; }
+      if (this.attackResponse.message === "You have been defeated last opponent pokemon, you have win the game" || this.attackResponse.message === "Your last pokemon has been defeated, you have lost the game") {
+        this.cookieService.delete("room")
+      }
       if (!(this.attackResponse != null && this.attackResponse.message === "Your opponent is not connected")) {
         const pokemons = await this.gameService.getPlayerPokemons();
         this.pokemons = pokemons.pokemonsAndStats.sort((a: any, b: any) => a.teamId - b.teamId);
         this.teamService.setPokemons(this.pokemons);
         this.turn = true;
         this.attackMessage = this.attackResponse.message;
-        this.pokemonAttackName = message.pokemon.name
+        const pokemonAttackName = message.pokemon.name
+        this.pokemonAttackName = this.getVideo(`PokemonGame/${pokemonAttackName!}`);
         console.log(this.pokemonAttackName)
         this.openPokemonAttackPopup();
         return;
@@ -76,6 +84,10 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
       width: '600px',
       height: 'auto'
     });
+  }
+
+  getVideo(publicId: string): string {
+    return this.cloudinaryService.getVideoUrl(publicId);
   }
 }
 

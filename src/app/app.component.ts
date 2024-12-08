@@ -15,7 +15,7 @@ import { VgCoreModule } from '@videogular/ngx-videogular/core';
 import { VgControlsModule } from '@videogular/ngx-videogular/controls';
 import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
 import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
-import { WebSocketService } from './services/websockets.service';
+//import { CloudinaryService } from './services/cloudinary.service';
 
 
 @Component({
@@ -36,7 +36,7 @@ export class AppComponent implements OnInit {
   title = 'myapp';
   isLogin: boolean | null = null;
 
-  constructor(private authService: AuthService, private router: Router, private webSocketService: WebSocketService) { }
+  constructor(private authService: AuthService, private router: Router, /*private cloudinaryService: CloudinaryService*/) { }
 
   ngOnInit() {
     this.authService.loggedIn$.subscribe((status) => {
@@ -50,4 +50,9 @@ export class AppComponent implements OnInit {
     this.authService.logout();
     this.router.navigateByUrl('/login');
   }
+
+  /*async getVideo(){
+    const video = await this.cloudinaryService.getVideo();
+    console.log(video)
+  }*/
 }

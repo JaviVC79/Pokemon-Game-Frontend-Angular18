@@ -3,7 +3,7 @@
     Attack with: {{pokemon.name.toUpperCase()}}
 </button>
 
-@if(attackResponse != null && attackResponse.message === "Your opponent is not connected"){
+@if(attackResponse != null && attackResponse === "Your opponent is not connected"){
 <p class="rounded-lg p-2 bg-red-500 mb-10 ml-4">Your opponent is not connected</p>
 }
 @if(turn === false){

@@ -32,7 +32,10 @@ type PokemonDto = {
     abilities: string;
     moves: string;
     teamId: number;
+    imageURL:string;
 }
+
+
 
 @Injectable({
     providedIn: 'root',
@@ -111,7 +114,7 @@ export class GameService {
         }
     }
 
-    async getPokemon(pokemon: any): Promise<any> {
+    async getPokemon(pokemon: any): Promise<(StatsDto | Partial<PokemonDto>)[]> {
         const stats: StatsDto = {
             hp: pokemon.stats[0].base_stat,
             attack: pokemon.stats[1].base_stat,
@@ -125,6 +128,7 @@ export class GameService {
             types: pokemon.types.map((type: any) => type.type.name).join(', '),
             abilities: pokemon.abilities.map((ability: any) => ability.ability.name).join(', '),
             moves: pokemon.moves.map((move: any) => move.move.name).join(', '),
+            imageURL: pokemon.sprites.other.home.front_shiny,
         };
         const body = [selectedPokemon, stats];
         return body
@@ -152,7 +156,7 @@ export class GameService {
         }
     }
 
-    async createNewPokemon(pokemon: string[], teamId: number) {
+    async createNewPokemon(pokemon: (StatsDto | Partial<PokemonDto>)[], teamId: number) {
         const jwt = this.cookieService.get('jwt');
         const body = pokemon
         const url = `${this.apiUrl}/pokemon/${teamId}`

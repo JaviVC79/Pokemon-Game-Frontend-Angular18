@@ -1,6 +1,7 @@
 <ng-container *ngFor="let pokemon of pokemons">
-    <div *ngIf="team.id === pokemon.teamId" class="border border-solid border-slate-500 rounded-lg m-2 w-full bg-white"
+    <div *ngIf="team.id === pokemon.teamId" class="border border-solid border-slate-500 rounded-lg m-2 w-full bg-white justify-items-center"
         (click)="getPokemonId(pokemon.id)">
+        <img src="{{pokemon.imageURL}}" alt="{{pokemon.name}}" class="w-60 object-cover" />
         <div class="justify-items-start">
             <button *ngIf="!(games && games[0]) && pokemon.id === pokemonId" mat-fab extended
                 class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 my-2 ml-4"

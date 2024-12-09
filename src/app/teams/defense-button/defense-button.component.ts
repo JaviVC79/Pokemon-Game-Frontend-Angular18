@@ -32,6 +32,7 @@ export class DefenseButtonComponent implements OnInit, OnDestroy {
     this.webSocketService.onDefense().pipe(takeUntil(this.destroy$)).subscribe(async (message: any) => {
       this.defenseResponse = message.message;
       console.log(this.defenseResponse.message);
+      if (this.defenseResponse === "Your opponent is not connected") return;
       if (this.defenseResponse.message === "It's not your turn") { this.turn = false; return; }
       if (!(this.defenseResponse != null && this.defenseResponse.message === "Your opponent is not connected")) {
         const pokemons = await this.gameService.getPlayerPokemons();
@@ -55,7 +56,7 @@ export class DefenseButtonComponent implements OnInit, OnDestroy {
 
   @Input() pokemon: any = null;
   pokemons: any[] = [];
-  defenseResponse: any = null;
+  defenseResponse?: any;
   @Input() team?: any;
   @Input() games?: any;
   turn?: boolean;

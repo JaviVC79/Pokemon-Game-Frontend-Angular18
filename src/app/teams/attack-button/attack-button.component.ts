@@ -33,7 +33,7 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
     });
     this.webSocketService.onAttack().pipe(takeUntil(this.destroy$)).subscribe(async (message: any) => {
       this.attackResponse = message.message;
-      console.log(this.attackResponse.message);
+      if (this.attackResponse === "Your opponent is not connected") return;
       if (this.attackResponse.message === "It's not your turn") { this.turn = false; return; }
       if (this.attackResponse.message === "You have been defeated last opponent pokemon, you have win the game" || this.attackResponse.message === "Your last pokemon has been defeated, you have lost the game") {
         this.cookieService.delete("room")
@@ -46,7 +46,6 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
         this.attackMessage = this.attackResponse.message;
         const pokemonAttackName = message.pokemon.name
         this.pokemonAttackName = this.getVideo(`PokemonGame/${pokemonAttackName!}`);
-        console.log(this.pokemonAttackName)
         this.openPokemonAttackPopup();
         return;
       }
@@ -60,12 +59,12 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
 
   @Input() pokemon: any = null;
   pokemons: any[] = [];
-  attackResponse: any = null;
+  attackResponse?: any;
   @Input() team?: any;
   @Input() games?: any;
   turn?: boolean;
   attackMessage?: string;
-  pokemonAttackName?:string;
+  pokemonAttackName?: string;
 
   sendMessage() {
     this.webSocketService.sendMessage("a ver si funciona");

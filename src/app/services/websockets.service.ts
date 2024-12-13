@@ -21,12 +21,14 @@ export class WebSocketService extends Socket {
     // Generar o recuperar el client_id 
     const clientId = localStorage.getItem('client_id') || generateClientId();
     localStorage.setItem('client_id', clientId);
+    const room = cookieService.get('room');
     super({
       url: 'https://3000-idx-pokemongameapi-1725292582953.cluster-rcyheetymngt4qx5fpswua3ry4.cloudworkstations.dev', options: {
         withCredentials: true,
         extraHeaders: {
           'user_id': cookieService.get('user_id'),
-          'client_id': clientId
+          'client_id': clientId,
+          'room': room
         }
       }
     })

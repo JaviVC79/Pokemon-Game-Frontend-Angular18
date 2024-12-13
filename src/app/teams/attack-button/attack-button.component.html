@@ -1,12 +1,13 @@
-<button mat-fab extended
-    class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10 ml-4" (click)="attack()">
-    Attack with: {{pokemon.name.toUpperCase()}}
+<button mat-fab extended class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10 ml-4"
+    [class.bg-red-300]="!isAttacking" [class.bg-red-400]="isAttacking" 
+    [disabled]="isAttacking" (click)="attack()">
+    Attack with: {{ pokemon.name.toUpperCase() }}
 </button>
+
 
 @if(attackResponse != null && attackResponse === "Your opponent is not connected"){
 <p class="rounded-lg p-2 bg-red-500 mb-10 ml-4">Your opponent is not connected</p>
 }
 @if(turn === false){
-    <p class="rounded-lg p-2 bg-red-500 mb-10 ml-4">It's not your turn, please wait for your opponent movement</p>
+<p class="rounded-lg p-2 bg-red-500 mb-10 ml-4">It's not your turn, please wait for your opponent movement</p>
 }
-

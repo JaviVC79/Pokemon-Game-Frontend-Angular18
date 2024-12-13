@@ -37,14 +37,15 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
     });
     this.webSocketService.onAttack().pipe(takeUntil(this.destroy$)).subscribe(async (message: any) => {
       this.attackResponse = message.message;
-      if (this.attackResponse === "Your opponent is not connected") return;
-      if (this.attackResponse.message === "It's not your turn") { this.turn = false; return; }
+      if (this.attackResponse === "Your opponent is not connected") { this.isAttacking = false; return; }
+      if (this.attackResponse.message === "It's not your turn") { this.isAttacking = false; this.turn = false; return; }
       if (this.attackResponse.message === "You have been defeated last opponent pokemon, you have win the game" || this.attackResponse.message === "Your last pokemon has been defeated, you have lost the game") {
-        this.teams= await this.gameService.getTeams();
+        this.teams = await this.gameService.getTeams();
         console.log(this.teams)
         this.teamService.setTeams(this.teams)
         this.webSocketService.disconnect();
         this.cookieService.delete("room")
+        this.isAttacking = false;
       }
       if (!(this.attackResponse != null && this.attackResponse.message === "Your opponent is not connected")) {
         const pokemons = await this.gameService.getPlayerPokemons();
@@ -55,6 +56,7 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
         const pokemonAttackName = message.pokemon.name
         this.pokemonAttackName = this.getVideo(`PokemonGame/${pokemonAttackName!}`);
         this.openPokemonAttackPopup();
+        this.isAttacking = false;
         return;
       }
     });
@@ -74,6 +76,7 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
   attackMessage?: string;
   pokemonAttackName?: string;
   teams?: TeamsResponse | null;
+  isAttacking: boolean = false;
 
   sendMessage() {
     this.webSocketService.sendMessage("a ver si funciona");
@@ -81,7 +84,7 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
   }
 
   attack() {
-    console.log(this.pokemon)
+    this.isAttacking = true;
     this.webSocketService.attack(this.pokemon);
   }
 

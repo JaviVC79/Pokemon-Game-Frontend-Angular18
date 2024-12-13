@@ -26,11 +26,11 @@ export class AuthService {
   }
 
   logout() {
-    this.webSocketService.disconnect();
+    this.webSocketService.onUserDisconnected();
     this.cookieService.delete('jwt');
-    this.cookieService.delete('user_id');
     this.cookieService.delete('room');
     this.loggedInSubject.next(false);
   }
 }
+
 

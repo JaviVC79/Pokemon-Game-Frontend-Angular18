@@ -1,5 +1,5 @@
 <button mat-fab extended class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10 ml-4"
-    (click)="startNewGame(team!)">
+    (click)="startNewGame(team!)" (click)="sendBattleTeam1(team!.id)" >
     Start new game with: {{team?.name}}
 </button>
 

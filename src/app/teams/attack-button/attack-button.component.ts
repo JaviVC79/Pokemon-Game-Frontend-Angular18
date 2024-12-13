@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
 import { CloudinaryService } from '../../services/cloudinary.service';
+import { TeamsResponse } from '../../utils/types/pokemonType';
 
 @Component({
   selector: 'app-attack-button',
@@ -31,11 +32,18 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
     this.teamService.pokemons$.pipe(takeUntil(this.destroy$)).subscribe(pokemons => {
       this.pokemons = pokemons;
     });
+    this.teamService.teams$.pipe(takeUntil(this.destroy$)).subscribe(teams => {
+      this.teams = teams;
+    });
     this.webSocketService.onAttack().pipe(takeUntil(this.destroy$)).subscribe(async (message: any) => {
       this.attackResponse = message.message;
       if (this.attackResponse === "Your opponent is not connected") return;
       if (this.attackResponse.message === "It's not your turn") { this.turn = false; return; }
       if (this.attackResponse.message === "You have been defeated last opponent pokemon, you have win the game" || this.attackResponse.message === "Your last pokemon has been defeated, you have lost the game") {
+        this.teams= await this.gameService.getTeams();
+        console.log(this.teams)
+        this.teamService.setTeams(this.teams)
+        this.webSocketService.disconnect();
         this.cookieService.delete("room")
       }
       if (!(this.attackResponse != null && this.attackResponse.message === "Your opponent is not connected")) {
@@ -57,7 +65,7 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  @Input() pokemon: any = null;
+  @Input() pokemon?: any;
   pokemons: any[] = [];
   attackResponse?: any;
   @Input() team?: any;
@@ -65,6 +73,7 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
   turn?: boolean;
   attackMessage?: string;
   pokemonAttackName?: string;
+  teams?: TeamsResponse | null;
 
   sendMessage() {
     this.webSocketService.sendMessage("a ver si funciona");
@@ -72,6 +81,7 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
   }
 
   attack() {
+    console.log(this.pokemon)
     this.webSocketService.attack(this.pokemon);
   }
 

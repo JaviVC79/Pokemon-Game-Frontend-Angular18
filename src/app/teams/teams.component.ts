@@ -133,4 +133,9 @@ export class TeamsComponent implements OnInit {
     this.teamService.setTeams(teams);
   }
 
+  async setBattleTeam1(battleTeam1:number){
+    this.battleTeam1=battleTeam1;
+    await this.getPlayerPokemons();
+  }
+
 }

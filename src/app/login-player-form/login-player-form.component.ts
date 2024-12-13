@@ -82,12 +82,18 @@ export class LoginPlayerFormComponent implements OnInit {
       const response = await lastValueFrom(this.http.post<any>(`${apiUrl}/login`, player, { withCredentials: true }));
       if (!response) return null;
       this.cookie = response.access_token;
-      this.cookieService.set('jwt', response.access_token);
-      this.cookieService.set('user_id', response.user_id);
+      do
+        this.cookieService.set('jwt', response.access_token);
+      while (this.cookieService.get('jwt') === '')
+      do
+        this.cookieService.set('user_id', response.user_id);
+      while (this.cookieService.get('user_id') === '')
       const game = await this.gameBattleService.getGames()
-      if (game!.length>0) {
+      if (game!.length > 0) {
         const gameId: string = game![0].id.toString();
-        this.cookieService.set('room', gameId);
+        //do
+          this.cookieService.set('room', gameId);
+        //while (this.cookieService.get('room') === '')
         this.webSocketService.connect();
         this.webSocketService.joinRoom();
       }

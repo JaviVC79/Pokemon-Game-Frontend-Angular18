@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { GameBattleService, GameStatus, NewGameResponse, Game } from '../../services/game-battle.service';
 import { WebSocketService } from '../../services/websockets.service';
 import { CookieService } from 'ngx-cookie-service';
@@ -77,6 +77,12 @@ export class NewGameButtonComponent implements OnInit {
   @Input() pokemons: any[] = [];
   @Input() games: Game[] | null = [];
   newGameData: any;
+
+  @Output() battleTeam1 = new EventEmitter<number>();
+
+  sendBattleTeam1(battleTeam1: number) {
+    this.battleTeam1.emit(battleTeam1);
+  }
 
 
   sendMessage(room: string = 'testRoom', message: string = '') {

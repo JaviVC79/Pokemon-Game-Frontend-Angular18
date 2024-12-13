@@ -30,7 +30,7 @@
         <button *ngIf="team.id === teamId && !(battleTeam1 === teamId || battleTeam2 === teamId)" mat-fab extended
             class="rounded-lg p-2 bg-red-300 mb-10 ml-4">{{team.name}}
             is no longer accepting new members.</button>
-        <app-new-game-button *ngIf="team.id === teamId && !(battleTeam1 === teamId || battleTeam2 === teamId || (games && games[0]))"
+        <app-new-game-button (battleTeam1)="setBattleTeam1($event)" *ngIf="team.id === teamId && !(battleTeam1 === teamId || battleTeam2 === teamId || (games && games[0]))"
             [team]="team" [teamId]="teamId" [pokemons]="pokemons" [games]="games" [teams]="teams" />
         <p class="rounded-lg p-2 bg-red-400 mb-10 ml-4"
             *ngIf="team.id === teamId && (battleTeam1 === teamId || battleTeam2 === teamId)">You have a started game

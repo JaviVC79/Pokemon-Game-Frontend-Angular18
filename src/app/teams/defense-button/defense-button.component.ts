@@ -7,6 +7,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CloudinaryService } from '../../services/cloudinary.service';
+import { SpecialPoints } from '../types/types';
+import { Pokemon, Team } from '../../utils/types/pokemonType';
 
 @Component({
   selector: 'app-defense-button',
@@ -26,18 +28,23 @@ export class DefenseButtonComponent implements OnInit, OnDestroy {
   ) { }
 
   async ngOnInit(): Promise<void> {
+    const specialPoints: SpecialPoints = await this.gameService.getSpecialPoints();
+    specialPoints ? this.teamService.setSpecialDefensePoints(specialPoints.specialDefensePoints) : this.teamService.setSpecialDefensePoints(0);
     this.teamService.pokemons$.pipe(takeUntil(this.destroy$)).subscribe(pokemons => {
       this.pokemons = pokemons;
     });
+    this.teamService.specialDefensePoints$.pipe(takeUntil(this.destroy$)).subscribe(specialDefensePoints => {
+      this.specialDefensePoints = specialDefensePoints;
+    });
     this.webSocketService.onDefense().pipe(takeUntil(this.destroy$)).subscribe(async (message: any) => {
       this.defenseResponse = message.message;
-      console.log(this.defenseResponse.message);
       if (this.defenseResponse === "Your opponent is not connected") {
         this.isDefending = false;
         return;
       }
       if (this.defenseResponse.message === "It's not your turn") { this.isDefending = false; this.turn = false; return; }
       if (!(this.defenseResponse != null && this.defenseResponse.message === "Your opponent is not connected")) {
+        console.log(this.defenseResponse.message)
         const pokemons = await this.gameService.getPlayerPokemons();
         this.pokemons = pokemons.pokemonsAndStats.sort((a: any, b: any) => a.teamId - b.teamId);
         this.teamService.setPokemons(this.pokemons);
@@ -45,28 +52,32 @@ export class DefenseButtonComponent implements OnInit, OnDestroy {
         this.defenseMessage = this.defenseResponse.message;
         const pokemonDefenseName = message.pokemon.name
         this.pokemonDefenseName = this.getVideo(`PokemonGame/${pokemonDefenseName!}`);
-        console.log(this.pokemonDefenseName)
         this.openPokemonDefensePopup();
         this.isDefending = false;
+        if (this.defenseMessage !== "You are too tired, your defense is not effective.") {
+          const specialPoints: SpecialPoints = this.defenseResponse.specialPointsPlayer;
+          this.teamService.setSpecialDefensePoints(specialPoints.specialDefensePoints);
+          console.log(this.specialDefensePoints)
+        }
         return;
       }
     });
   }
-
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  @Input() pokemon: any = null;
-  pokemons: any[] = [];
+  @Input() pokemon!: Pokemon;
+  pokemons: Pokemon[] = [];
   defenseResponse?: any;
-  @Input() team?: any;
+  @Input() team?: Team;
   @Input() games?: any;
   turn?: boolean;
   defenseMessage?: string;
   pokemonDefenseName?: string;
   isDefending: boolean = false;
+  specialDefensePoints?: number;
 
   defense() {
     this.isDefending = true;

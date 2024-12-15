@@ -1,21 +1,30 @@
 <ng-container *ngFor="let pokemon of pokemons">
-    <div *ngIf="team.id === pokemon.teamId" class="border border-solid border-slate-500 rounded-lg m-2 w-full bg-white justify-items-center"
+    <div *ngIf="team.id === pokemon.teamId"
+        class="border border-solid border-slate-500 rounded-lg m-2 w-full bg-white justify-items-center"
         (click)="getPokemonId(pokemon.id)">
         <img src="{{pokemon.imageURL}}" alt="{{pokemon.name}}" class="w-60 object-cover" />
         <div class="justify-items-start">
             <button *ngIf="!(games && games[0]) && pokemon.id === pokemonId" mat-fab extended
                 class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 my-2 ml-4"
                 (click)="callRemovePokemon(pokemon.id)">Remove: {{pokemon.name}}</button>
-            <app-attack-button *ngIf="games && games[0] && pokemon.id === pokemonId" [pokemon]="pokemon" (pokemons)="pokemons!" [team]="team" [games]="games" />
-            <app-defense-button *ngIf="games && games[0] && pokemon.id === pokemonId" [pokemon]="pokemon" (pokemons)="pokemons!" [team]="team" [games]="games" />
-            <p class="m-2"><strong>Name:</strong> {{pokemon.name.toUpperCase()}}</p>
-            <p class="m-2"><strong>Abilities:</strong> {{pokemon.abilities}}</p>
-            <p class="m-2"><strong>Types:</strong> {{pokemon.types}}</p>
+            <app-attack-button *ngIf="games && games[0] && pokemon.id === pokemonId" [pokemon]="pokemon"
+                (pokemons)="pokemons!" [team]="team" [games]="games" />
+            <app-defense-button *ngIf="games && games[0] && pokemon.id === pokemonId" [pokemon]="pokemon"
+                (pokemons)="pokemons!" [team]="team" [games]="games" />
+            <section class="flex flex-row justify-between">
+                <div>
+                    <p class="m-2"><strong>Name:</strong> {{pokemon.name.toUpperCase()}}</p>
+                    <p class="m-2"><strong>Abilities:</strong> {{pokemon.abilities}}</p>
+                    <p class="m-2"><strong>Types:</strong> {{pokemon.types}}</p>
+                </div>
+                <div>
+                    <p class="m-2"><strong>HP:</strong> {{pokemon.stats.hp}}</p>
+                    <p class="m-2"><strong>Attack:</strong> {{pokemon.stats.attack}}</p>
+                    <p class="m-2"><strong>Defense:</strong> {{pokemon.stats.defense}}</p>
+                    <p class="m-2"><strong>Speed:</strong> {{pokemon.stats.speed}}</p>
+                </div>
+            </section>
             <p class="m-2"><strong>Moves:</strong> {{pokemon.moves}}</p>
-            <p class="m-2"><strong>HP:</strong> {{pokemon.stats.hp}}</p>
-            <p class="m-2"><strong>Attack:</strong> {{pokemon.stats.attack}}</p>
-            <p class="m-2"><strong>Defense:</strong> {{pokemon.stats.defense}}</p>
-            <p class="m-2"><strong>Speed:</strong> {{pokemon.stats.speed}}</p>
         </div>
     </div>
 </ng-container>

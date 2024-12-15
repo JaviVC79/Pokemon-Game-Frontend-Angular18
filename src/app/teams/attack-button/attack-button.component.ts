@@ -8,7 +8,9 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
 import { CloudinaryService } from '../../services/cloudinary.service';
-import { TeamsResponse } from '../../utils/types/pokemonType';
+import { TeamsResponse, Pokemon, Team } from '../../utils/types/pokemonType';
+import { SpecialPoints } from '../types/types';
+
 
 @Component({
   selector: 'app-attack-button',
@@ -17,7 +19,9 @@ import { TeamsResponse } from '../../utils/types/pokemonType';
   templateUrl: './attack-button.component.html',
 })
 export class AttackButtonComponent implements OnInit, OnDestroy {
+
   private destroy$ = new Subject<void>();
+
 
   constructor(
     private webSocketService: WebSocketService,
@@ -29,8 +33,13 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
   ) { }
 
   async ngOnInit(): Promise<void> {
+    const specialPoints: SpecialPoints = await this.gameService.getSpecialPoints();
+    specialPoints ? this.teamService.setSpecialAttackPoints(specialPoints.specialAttackPoints) : this.teamService.setSpecialAttackPoints(0);
     this.teamService.pokemons$.pipe(takeUntil(this.destroy$)).subscribe(pokemons => {
       this.pokemons = pokemons;
+    });
+    this.teamService.specialAttackPoints$.pipe(takeUntil(this.destroy$)).subscribe(specialAttackPoints => {
+      this.specialAttackPoints = specialAttackPoints;
     });
     this.teamService.teams$.pipe(takeUntil(this.destroy$)).subscribe(teams => {
       this.teams = teams;
@@ -48,18 +57,24 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
         this.isAttacking = false;
       }
       if (!(this.attackResponse != null && this.attackResponse.message === "Your opponent is not connected")) {
-        const pokemons = await this.gameService.getPlayerPokemons();
-        this.pokemons = pokemons.pokemonsAndStats.sort((a: any, b: any) => a.teamId - b.teamId);
-        this.teamService.setPokemons(this.pokemons);
-        this.turn = true;
-        this.attackMessage = this.attackResponse.message;
-        const pokemonAttackName = message.pokemon.name
-        this.pokemonAttackName = this.getVideo(`PokemonGame/${pokemonAttackName!}`);
-        this.openPokemonAttackPopup();
-        this.isAttacking = false;
+        await this.updatePokemons(message);
+        if (this.attackMessage !== "Your attack is not effective.") {
+          const specialPoints: SpecialPoints = this.attackResponse.specialPointsPlayer;
+          this.teamService.setSpecialAttackPoints(specialPoints.specialAttackPoints);
+          console.log(this.specialAttackPoints)
+        }
         return;
       }
     });
+    this.webSocketService.onAttackAllYourEnemies().pipe(takeUntil(this.destroy$)).subscribe(async (message: any) => {
+      this.attackResponse = message.message;
+      await this.updatePokemons(message);
+      if(!this.pokemons || this.pokemons.length === 0){
+        this.teamService.setTeams(this.teams)
+        this.webSocketService.disconnect();
+        this.cookieService.delete("room")
+      }
+    })
   }
 
   ngOnDestroy() {
@@ -67,16 +82,17 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  @Input() pokemon?: any;
-  pokemons: any[] = [];
+  @Input() pokemon?: Pokemon;
+  pokemons: Pokemon[] = [];
   attackResponse?: any;
-  @Input() team?: any;
+  @Input() team?: Team;
   @Input() games?: any;
   turn?: boolean;
   attackMessage?: string;
   pokemonAttackName?: string;
   teams?: TeamsResponse | null;
   isAttacking: boolean = false;
+  specialAttackPoints?: number;
 
   sendMessage() {
     this.webSocketService.sendMessage("a ver si funciona");
@@ -101,6 +117,29 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
   getVideo(publicId: string): string {
     return this.cloudinaryService.getVideoUrl(publicId);
   }
+
+  attackAllYourEnemies() {
+    this.isAttacking = true;
+    this.webSocketService.attackAllYourEnemies(this.pokemon);
+
+  }
+
+  SpecialAttack() {
+    throw new Error('Method not implemented.');
+  }
+
+  async updatePokemons(message: any) {
+    const pokemons = await this.gameService.getPlayerPokemons();
+    this.pokemons = pokemons.pokemonsAndStats.sort((a: any, b: any) => a.teamId - b.teamId);
+    this.teamService.setPokemons(this.pokemons);
+    this.turn = true;
+    this.attackMessage = this.attackResponse.message;
+    const pokemonAttackName = message.pokemon.name
+    this.pokemonAttackName = this.getVideo(`PokemonGame/${pokemonAttackName!}`);
+    this.openPokemonAttackPopup();
+    this.isAttacking = false;
+  }
+
 }
 
 

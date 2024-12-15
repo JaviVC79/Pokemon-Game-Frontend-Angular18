@@ -99,7 +99,6 @@ export class WebSocketService extends Socket {
   attack(message: any) {
     const room = this.cookieService.get('room');
     this.currentRoom = room;
-    console.log(room)
     this.ioSocket.emit('attack', { room: room, message });
   }
 
@@ -117,6 +116,15 @@ export class WebSocketService extends Socket {
     return fromEvent(this.ioSocket, 'defense');
   }
 
+  attackAllYourEnemies(message: any) {
+    const room = this.cookieService.get('room');
+    this.currentRoom = room;
+    this.ioSocket.emit('attackAllYourEnemies', { room: room, message });
+  }
+
+  onAttackAllYourEnemies(): Observable<any> {
+    return fromEvent(this.ioSocket, 'attackAllYourEnemies');
+  }
 
 }
 

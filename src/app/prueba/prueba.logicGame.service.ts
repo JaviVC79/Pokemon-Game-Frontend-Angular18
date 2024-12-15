@@ -41,6 +41,7 @@ type PokemonDto = {
     providedIn: 'root',
 })
 export class GameService {
+
     constructor(private http: HttpClient, 
         private gameBattleService: GameBattleService,
         private cookieService: CookieService) { }
@@ -258,4 +259,22 @@ export class GameService {
             }
         }
     }
+    async getSpecialPoints() {
+        const jwt = this.cookieService.get('jwt'); {
+            const url = `${this.apiUrl}/specialPoints`
+            try {
+                const response: any = await lastValueFrom(this.http.get<Array<any>>(url, {
+                    withCredentials: true,
+                    headers: {
+                        authorization: `Bearer ${jwt}`
+                    }
+                }));
+                if (!response) return null;
+                return response;
+            } catch (error) {
+                console.log(error);
+                return null
+            }
+        }
+      }
 }

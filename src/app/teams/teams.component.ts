@@ -9,15 +9,9 @@ import { VgCoreModule } from '@videogular/ngx-videogular/core';
 import { VideoPlayerComponent } from './video-player/video-player.component';
 import { TeamsListComponent } from "./teams-list/teams-list.component";
 import { NewGameButtonComponent } from "./new-game-button/new-game-button.component";
-import { Game } from '../services/game-battle.service';
+import { Game } from '../services/interfaces-and-types/game-battle';
 import { GameBattleService } from '../services/game-battle.service';
-
-
-export interface Team {
-  id: number;
-  name: string;
-}
-
+import { TeamResponse } from '../utils/types/pokemonType';
 
 @Component({
   selector: 'app-teams',
@@ -27,7 +21,7 @@ export interface Team {
 })
 
 export class TeamsComponent implements OnInit {
-  teams: any | null = null;
+  teams: TeamResponse[] | null = null;
   pokemons: any[] = [];
   teamId: number = 0;
   teamCompletedId: number = 0;
@@ -46,17 +40,25 @@ export class TeamsComponent implements OnInit {
 
   async ngOnInit() {
     try {
-      await Promise.all([this.getTeams(), this.getPlayerPokemons()]);
+      const teams = await this.getTeams();
+      this.getPlayerPokemons();
     } catch (error) {
       console.error('Error fetching data:', error);
     }
     this.teamService.pokemons$.subscribe(pokemons => {
       this.pokemons = pokemons;
     });
+    this.teamService.games$.subscribe(games => {
+      this.games = games;
+    });
+    this.teamService.teams$.subscribe(teams => {
+      this.teams = teams;
+    });
   }
 
-  async onTeamsChange(newTeams: any[]) {
+  async onTeamsChange(newTeams: TeamResponse[]) {
     this.teams = newTeams;
+    this.setTeams(newTeams);
     try {
       await Promise.all([this.getTeams(), this.getPlayerPokemons()]);
     } catch (error) {
@@ -66,7 +68,8 @@ export class TeamsComponent implements OnInit {
 
   async getTeams() {
     const teams: TeamsResponse | null = await this.gameService.getTeams();
-    this.teams = teams?.teams;
+    if (!teams) return;
+    this.teams = teams.teams;
     this.setTeams(this.teams);
   }
 
@@ -82,8 +85,8 @@ export class TeamsComponent implements OnInit {
       }, {});
       // Obtener los teamId que se repiten cinco o más veces
       const frequentTeamIds = Object.keys(teamIdCounts).filter(teamId => teamIdCounts[teamId] >= 5);
-      this.completedTeams = frequentTeamIds.map(teamId => this.teams.find((team: any) => team.id === parseInt(teamId)));
-      this.incompletedTeams = [...this.teams].filter(team => !frequentTeamIds.includes(team.id.toString()));
+      this.completedTeams = frequentTeamIds.map(teamId => this.teams!.find((team: any) => team.id === parseInt(teamId)));
+      this.incompletedTeams = [...this.teams!].filter(team => !frequentTeamIds.includes(team.id.toString()));
       this.completedTeamsId = frequentTeamIds;
       this.games = await this.getGames();
       if (this.games && this.games[0]) {
@@ -98,6 +101,7 @@ export class TeamsComponent implements OnInit {
 
   async getGames() {
     const games: Game[] | null = await this.gameBattleService.getGames();
+    if (games) this.setGames(games)
     return games;
   }
 
@@ -133,8 +137,12 @@ export class TeamsComponent implements OnInit {
     this.teamService.setTeams(teams);
   }
 
-  async setBattleTeam1(battleTeam1:number){
-    this.battleTeam1=battleTeam1;
+  setGames(games: Game[]) {
+    this.teamService.setGames(games);
+  }
+
+  async setBattleTeam1(battleTeam1: number) {
+    this.battleTeam1 = battleTeam1;
     await this.getPlayerPokemons();
   }
 

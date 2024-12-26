@@ -3,29 +3,8 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, lastValueFrom } from "rxjs";
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from "../../environments/environment";
+import { GameStatus, NewGameResponse, Game } from "./interfaces-and-types/game-battle";
 
-export enum GameStatus {
-    'notStarted' = 'notStarted',
-    'waiting for another player' = 'waiting for another player',
-    'inProgress' = 'inProgress',
-    'finished' = 'finished'
-}
-
-export interface NewGameResponse {
-    status: number;
-    message: string;
-    gameId: number
-}
-
-
-export interface Game {
-    id: number;
-    player1TeamId?: number;
-    player2TeamId?: number;
-    winnerId?: number;
-    user_id1?: string;
-    user_id2?: string;
-}
 
 @Injectable({
     providedIn: 'root',
@@ -34,7 +13,7 @@ export class GameBattleService {
 
     constructor(private http: HttpClient, private cookieService: CookieService) { }
     private apiUrl = environment.apiUrl;
-
+    
     private oponentIdSubject = new BehaviorSubject<string>('');
     oponentId$ = this.oponentIdSubject.asObservable();
     private playerIdSubject = new BehaviorSubject<string>('');
@@ -99,7 +78,7 @@ export class GameBattleService {
             return error
         }
     }
-    async getPokemonsChanges(){
+    async getPokemonsChanges() {
         const jwt = this.cookieService.get('jwt');
         const url = `${this.apiUrl}/pokemons`
         try {

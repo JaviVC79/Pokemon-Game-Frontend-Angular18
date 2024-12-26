@@ -2,12 +2,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { VgCoreModule } from '@videogular/ngx-videogular/core';
 import { CloudinaryService } from '../../services/cloudinary.service';
+import { NgIf } from '@angular/common';
 
 
 @Component({
   selector: 'app-video-player',
   standalone: true,
-  imports: [VgCoreModule],
+  imports: [VgCoreModule, NgIf],
   templateUrl: './video-player.component.html',
 })
 export class VideoPlayerComponent implements OnInit {
@@ -19,16 +20,15 @@ export class VideoPlayerComponent implements OnInit {
   miraidonVideo?: string;
   squirtleVideo?: string;
 
-  ngOnInit(): void {
-    this.charizardVideo = this.getVideo("PokemonGame/charizard");
-    this.ironHandsVideo = this.getVideo("PokemonGame/iron-hands");
-    this.miraidonVideo = this.getVideo("PokemonGame/miraidon");
-    this.squirtleVideo = this.getVideo("PokemonGame/squirtle");
-
+  async ngOnInit(): Promise<void> {
+    this.charizardVideo = await this.getVideo("PokemonGame/charizard");
+    this.ironHandsVideo = await this.getVideo("PokemonGame/iron-hands");
+    this.miraidonVideo = await this.getVideo("PokemonGame/miraidon");
+    this.squirtleVideo = await this.getVideo("PokemonGame/squirtle");
   }
 
-  getVideo(publicId: string): string {
-    return this.cloudinaryService.getVideoUrl(publicId);
+  async getVideo(publicId: string): Promise<string> {
+    return await this.cloudinaryService.getVideoUrl(publicId);
   }
 
 }

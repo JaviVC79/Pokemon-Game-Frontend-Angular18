@@ -11,11 +11,11 @@
           </div>
           <div
             class="absolute inset-0 backface-hidden rotate-y-180 rounded-lg overflow-hidden shadow-lg bg-white border-4 border-red-500">
-            <img src={{pokemon.sprites.other.home.front_shiny}} alt={{pokemon.sprites.other.home.front_shiny}}
+            <img src={{pokemon.sprites!.other!.home.front_shiny}} alt={{pokemon.sprites!.other!.home.front_shiny}}
               class="w-full object-cover" />
             <div class="absolute inset-0 flex flex-col justify-end items-center mb-4 cursor-pointer bg-red-500 mt-80"
-              (click)="clickCard(pokemon.id)">
-              <h3 class="text-white text-2xl font-bold">{{pokemon.name.toUpperCase()}}</h3>
+              (click)="clickCard(pokemon.id!)">
+              <h3 class="text-white text-2xl font-bold">{{pokemon.name!.toUpperCase()}}</h3>
             </div>
           </div>
         </div>

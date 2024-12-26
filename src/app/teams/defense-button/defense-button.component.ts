@@ -17,6 +17,7 @@ import { Pokemon, Team } from '../../utils/types/pokemonType';
   templateUrl: './defense-button.component.html',
 })
 export class DefenseButtonComponent implements OnInit, OnDestroy {
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -44,22 +45,36 @@ export class DefenseButtonComponent implements OnInit, OnDestroy {
       }
       if (this.defenseResponse.message === "It's not your turn") { this.isDefending = false; this.turn = false; return; }
       if (!(this.defenseResponse != null && this.defenseResponse.message === "Your opponent is not connected")) {
-        console.log(this.defenseResponse.message)
-        const pokemons = await this.gameService.getPlayerPokemons();
-        this.pokemons = pokemons.pokemonsAndStats.sort((a: any, b: any) => a.teamId - b.teamId);
-        this.teamService.setPokemons(this.pokemons);
-        this.turn = true;
-        this.defenseMessage = this.defenseResponse.message;
-        const pokemonDefenseName = message.pokemon.name
-        this.pokemonDefenseName = this.getVideo(`PokemonGame/${pokemonDefenseName!}`);
-        this.openPokemonDefensePopup();
-        this.isDefending = false;
+        await this.setDefenseChanges(message)
         if (this.defenseMessage !== "You are too tired, your defense is not effective.") {
           const specialPoints: SpecialPoints = this.defenseResponse.specialPointsPlayer;
           this.teamService.setSpecialDefensePoints(specialPoints.specialDefensePoints);
           console.log(this.specialDefensePoints)
         }
         return;
+      }
+    });
+    this.webSocketService.onDefendAllYourPokemons().pipe(takeUntil(this.destroy$)).subscribe(async (message: any) => {
+      this.defenseResponse = message.message;
+      if (this.defenseResponse === "Your opponent is not connected") {
+        this.isDefending = false;
+        return;
+      }
+      if (this.defenseResponse.message === "It's not your turn") { this.isDefending = false; this.turn = false; return; }
+      if (!(this.defenseResponse != null && this.defenseResponse.message === "Your opponent is not connected")) {
+        await this.setDefenseChanges(message)
+      }
+    });
+
+    this.webSocketService.onSpecialDefense().pipe(takeUntil(this.destroy$)).subscribe(async (message: any) => {
+      this.defenseResponse = message.message;
+      if (this.defenseResponse === "Your opponent is not connected") {
+        this.isDefending = false;
+        return;
+      }
+      if (this.defenseResponse.message === "It's not your turn") { this.isDefending = false; this.turn = false; return; }
+      if (!(this.defenseResponse != null && this.defenseResponse.message === "Your opponent is not connected")) {
+        await this.setDefenseChanges(message)
       }
     });
   }
@@ -93,8 +108,31 @@ export class DefenseButtonComponent implements OnInit, OnDestroy {
       height: 'auto'
     });
   }
-  getVideo(publicId: string): string {
-    return this.cloudinaryService.getVideoUrl(publicId);
+  async getVideo(publicId: string): Promise<string> {
+    return await this.cloudinaryService.getVideoUrl(publicId);
+  }
+
+  defendAllYourPokemons() {
+    this.isDefending = true;
+    this.webSocketService.defendAllYourPokemons(this.pokemon);
+  }
+
+  specialDefense() {
+    this.isDefending = true;
+    this.webSocketService.specialDefense(this.pokemon);
+  }
+
+  private async setDefenseChanges(message: any) {
+    const pokemons = await this.gameService.getPlayerPokemons();
+    this.pokemons = pokemons.pokemonsAndStats.sort((a: any, b: any) => a.teamId - b.teamId);
+    this.teamService.setPokemons(this.pokemons);
+    this.turn = true;
+    this.defenseMessage = this.defenseResponse.message;
+    const pokemonDefenseName = message.pokemon.name
+    this.pokemonDefenseName = await this.getVideo(`PokemonGame/${pokemonDefenseName!}`);
+    this.openPokemonDefensePopup();
+    this.isDefending = false;
+    return;
   }
 
 }

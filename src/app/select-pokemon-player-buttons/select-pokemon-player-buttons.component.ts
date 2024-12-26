@@ -6,11 +6,9 @@ import { NgIf } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupPokemonAddedComponent } from '../pop-ups/popup-pokemonAdded.component';
+import { Team } from '../services/interfaces-and-types/team';
 
-interface team {
-  id: number,
-  name: string
-}
+
 
 @Component({
   selector: 'app-select-pokemon-player-buttons',
@@ -21,7 +19,7 @@ interface team {
 })
 
 export class SelectPokemonPlayerComponent implements OnInit {
-  team!: team;
+  team!: Team;
   teams!: any;
   @Input() pokemon: any;
   isLogin: boolean | null = null;
@@ -45,7 +43,7 @@ export class SelectPokemonPlayerComponent implements OnInit {
   }
 
 
-  async addPokemon(pokemon: any, team: team) {
+  async addPokemon(pokemon: any, team: Team) {
     const pokemonNumbers = await this.getNumberPokemonsInTeam(team);
     if (pokemonNumbers >= 5) {
       this.isMaxPokemonsReached = true;
@@ -66,7 +64,7 @@ export class SelectPokemonPlayerComponent implements OnInit {
     });
   }
 
-  async getNumberPokemonsInTeam(team: team) {
+  async getNumberPokemonsInTeam(team: Team) {
     const response = await this.gameService.getPlayerPokemons();
     const playerPokemons = response.pokemonsAndStats;
     const pokemonsInTeam = playerPokemons.filter((pokemon: any) => pokemon.teamId === team.id);

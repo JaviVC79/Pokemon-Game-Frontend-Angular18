@@ -1,28 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { GameBattleService, GameStatus, NewGameResponse, Game } from '../../services/game-battle.service';
+import { GameBattleService } from '../../services/game-battle.service';
 import { WebSocketService } from '../../services/websockets.service';
 import { CookieService } from 'ngx-cookie-service';
-
-interface Team {
-  id: number;
-  user_id: string;
-  name: string;
-  playerId: number;
-}
-
-interface StatusTeams {
-  teamId: number;
-  gameStatus: GameStatus;
-}
-
-export interface GameState {
-  id: number;
-  player1TeamId: number | null;
-  player2TeamId: number | null;
-  winnerId: number | null;
-  user_id1: string | null;
-  user_id2: string | null;
-}
+import { GameStatus, NewGameResponse, Game } from '../../services/interfaces-and-types/game-battle';
+import { GameState, StatusTeams, Team } from './interfaces/new-game-button';
 
 
 @Component({
@@ -106,7 +87,7 @@ export class NewGameButtonComponent implements OnInit {
       this.webSocketService.connect();
       this.webSocketService.joinRoom();
     } else if (newGameResponse.message === "game started") {
-      this.updateGameStatusTeams(team.id, GameStatus.inProgress, gameId);
+      this.updateGameStatusTeams(team.id, GameStatus['waiting for another player'], gameId);
       this.webSocketService.connect();
       this.webSocketService.joinRoom();
     }

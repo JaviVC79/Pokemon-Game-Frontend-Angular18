@@ -15,7 +15,7 @@ import { VgCoreModule } from '@videogular/ngx-videogular/core';
 import { VgControlsModule } from '@videogular/ngx-videogular/controls';
 import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
 import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
-//import { CloudinaryService } from './services/cloudinary.service';
+
 
 
 @Component({
@@ -52,8 +52,5 @@ export class AppComponent implements OnInit {
     this.router.navigateByUrl('/login');
   }
 
-  /*async getVideo(){
-    const video = await this.cloudinaryService.getVideo();
-    console.log(video)
-  }*/
+
 }

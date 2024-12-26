@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable, fromEvent } from 'rxjs';
 import { Socket } from 'ngx-socket-io';
+import { Pokemon } from '../utils/types/pokemonType';
 
 
 @Injectable({
@@ -23,7 +24,7 @@ export class WebSocketService extends Socket {
     localStorage.setItem('client_id', clientId);
     const room = cookieService.get('room');
     super({
-      url: 'https://3000-idx-pokemongameapi-1725292582953.cluster-rcyheetymngt4qx5fpswua3ry4.cloudworkstations.dev', options: {
+      url: 'https://apipokemongamenestjs.onrender.com', options: {
         withCredentials: true,
         extraHeaders: {
           'user_id': cookieService.get('user_id'),
@@ -62,7 +63,6 @@ export class WebSocketService extends Socket {
   onUserAuthenticated(newUserId: string) {
     this.cookieService.set('user_id', newUserId);
     this.disconnect();
-    //this.initializeSocket();
     this.connect();
   }
 
@@ -124,6 +124,36 @@ export class WebSocketService extends Socket {
 
   onAttackAllYourEnemies(): Observable<any> {
     return fromEvent(this.ioSocket, 'attackAllYourEnemies');
+  }
+
+  specialAttack(message: any) {
+    const room = this.cookieService.get('room');
+    this.currentRoom = room;
+    this.ioSocket.emit('specialAttack', { room: room, message });
+  }
+
+  onSpecialAttack(): Observable<any> {
+    return fromEvent(this.ioSocket, 'specialAttack');
+  }
+
+  defendAllYourPokemons(message: any) {
+    const room = this.cookieService.get('room');
+    this.currentRoom = room;
+    this.ioSocket.emit('defendAllYourPokemons', { room: room, message });
+  }
+
+  onDefendAllYourPokemons(){
+    return fromEvent(this.ioSocket, 'defendAllYourPokemons');
+  }
+
+  specialDefense(message: any) {
+    const room = this.cookieService.get('room');
+    this.currentRoom = room;
+    this.ioSocket.emit('specialDefense', { room: room, message });
+  }
+
+  onSpecialDefense(): Observable<any> {
+    return fromEvent(this.ioSocket, 'specialDefense');
   }
 
 }

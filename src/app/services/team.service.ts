@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { Team } from './interfaces-and-types/team';
+import { Game } from './interfaces-and-types/game-battle';
 
-
-interface Team {
-  id: number;
-  name: string;
-}
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +25,9 @@ export class TeamService {
 
   private specialAttackPointsSubject = new BehaviorSubject<any>([]);
   specialAttackPoints$ = this.specialAttackPointsSubject.asObservable();
+
+  private gamesSubject = new BehaviorSubject<Game[]>([]);
+  games$ = this.gamesSubject.asObservable();
 
   setTeamId(teamId: number, teamName: string) {
     const team: Team = {
@@ -55,6 +55,10 @@ export class TeamService {
 
   setSpecialAttackPoints(specialAttackPoints: number) {
     this.specialAttackPointsSubject.next(specialAttackPoints);
+  }
+
+  setGames(games: Game[]) {
+    this.gamesSubject.next(games);
   }
 
 }

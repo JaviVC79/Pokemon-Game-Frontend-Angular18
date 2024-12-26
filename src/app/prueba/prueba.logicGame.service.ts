@@ -3,38 +3,8 @@ import { Injectable } from "@angular/core";
 import { lastValueFrom } from "rxjs";
 import { CookieService } from 'ngx-cookie-service';
 import { TeamsResponse } from "../utils/types/pokemonType";
-import { GameBattleService } from "../services/game-battle.service";
 import { environment } from "../../environments/environment";
-
-interface pokemonStats {
-    hp: number;
-    attack: number;
-    defense: number;
-    specialAttack: number;
-    specialDefense: number;
-    speed: number;
-}
-
-type StatsDto = {
-    hp: number;
-    attack: number;
-    specialAttack: number;
-    defense: number;
-    specialDefense: number;
-    speed: number;
-}
-
-type PokemonDto = {
-    id: number;
-    name: string;
-    statsId: number;
-    types: string;
-    abilities: string;
-    moves: string;
-    teamId: number;
-    imageURL:string;
-}
-
+import { PokemonStats, StatsDto, PokemonDto } from "../prueba/interfaces/logicGame";
 
 
 @Injectable({
@@ -43,7 +13,6 @@ type PokemonDto = {
 export class GameService {
 
     constructor(private http: HttpClient, 
-        private gameBattleService: GameBattleService,
         private cookieService: CookieService) { }
         private apiUrl = environment.apiUrl;
 
@@ -61,8 +30,8 @@ export class GameService {
     player2Teams: string[] = [];
     player1TeamsString: string = "";
     player2TeamsString: string = "";
-    player1PokemonStats: pokemonStats[] = [];
-    player2PokemonStats: pokemonStats[] = [];
+    player1PokemonStats: PokemonStats[] = [];
+    player2PokemonStats: PokemonStats[] = [];
     player1PokemonStatsString: string = "";
     player2PokemonStatsString: string = "";
     player1PokemonMoves: string[] = [];
@@ -74,9 +43,6 @@ export class GameService {
 
 
     addPokemonPlayer(pokemon: any) {
-        //console.log(pokemon)
-        //console.log(this.player1PokemonStats.length)
-        //console.log(this.player2PokemonStats.length)
         if (!localStorage.getItem('player1PokemonStats') && this.player1PokemonStats.length >= 6) {
             this.player1PokemonStats.length = 0;
             this.player1PokemonStats = [];

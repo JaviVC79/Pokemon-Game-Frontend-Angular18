@@ -4,11 +4,22 @@
         Defend your: {{ pokemon.name.toUpperCase() }}
     </button>
 
-    
-    <p class="rounded-lg p-2 bg-red-500 mb-10 ml-4">You
-        have:
-        {{specialDefensePoints}} special defense points</p>
-    
+    <p class="rounded-lg p-2 bg-red-500 mb-10 ml-4">
+        You have: {{specialDefensePoints}} special defense points
+    </p>
+
+    @if(specialDefensePoints! >= 10) { <button mat-fab extended
+        class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10 ml-4" [class.bg-red-300]="!isDefending"
+        [class.bg-red-400]="isDefending" [disabled]="isDefending" (click)="specialDefense()">
+        Special defense with: {{ pokemon!.name.toUpperCase() }}
+    </button>
+    <button mat-fab extended class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10 ml-4"
+        [class.bg-red-300]="!isDefending" [class.bg-red-400]="isDefending" [disabled]="isDefending"
+        (click)="defendAllYourPokemons()">
+        Defend all your pokemons at once with: {{ pokemon!.name.toUpperCase() }}
+    </button>
+    }
+
 </div>
 
 @if(defenseResponse != null && defenseResponse === "Your opponent is not connected"){

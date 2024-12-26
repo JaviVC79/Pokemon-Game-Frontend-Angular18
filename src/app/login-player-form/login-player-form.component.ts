@@ -80,7 +80,7 @@ export class LoginPlayerFormComponent implements OnInit {
   async loginPlayer(player: any) {
     try {
       const response = await lastValueFrom(this.http.post<any>(`${apiUrl}/login`, player, { withCredentials: true }));
-      if (!response) return null;
+      if (!response || response.status == 401 || !response.access_token) return null;
       this.cookie = response.access_token;
       do
         this.cookieService.set('jwt', response.access_token);
@@ -92,7 +92,7 @@ export class LoginPlayerFormComponent implements OnInit {
       if (game!.length > 0) {
         const gameId: string = game![0].id.toString();
         //do
-          this.cookieService.set('room', gameId);
+        this.cookieService.set('room', gameId);
         //while (this.cookieService.get('room') === '')
         this.webSocketService.connect();
         this.webSocketService.joinRoom();

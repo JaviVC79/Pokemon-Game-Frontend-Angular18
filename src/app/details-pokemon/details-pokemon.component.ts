@@ -7,6 +7,7 @@ import { SelectPokemonPlayerComponent } from '../select-pokemon-player-buttons/s
 import { PokemonService } from '../services/api.service';
 import Atropos from 'atropos';
 import 'atropos/css'
+import { Pokemon } from '../prueba/interfaces/prueba';
 
 @Component({
   selector: 'app-details-pokemon',
@@ -41,7 +42,7 @@ export class DetailsPokemonComponent implements AfterViewInit{
 
  
   isReverse: boolean = false;
-  @Input() pokemon: any;
+  @Input() pokemon: Partial<Pokemon> | null = null;
   @Output() isClicked = new EventEmitter<boolean>();
   pokemonDetail: string = "stats";
   pokemonDetailMoveEffect: string | null = null;

@@ -12,42 +12,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { BackForwardButtonsComponent } from '../back-forward-buttons/back-forward-buttons.component';
 import { DetailsPokemonComponent } from '../details-pokemon/details-pokemon.component';
 import { GameService } from './prueba.logicGame.service';
+import { Data, Afecting_moves, Pokemon, Decrease, Increase } from './interfaces/prueba';
 
-
-
-
-export interface Data {
-  count: number;
-  next: string;
-  previous: null | string;
-  results: any[];
-}
-interface Afecting_moves {
-  decrease: Decrease[];
-  increase: Increase[];
-}
-
-interface Decrease {
-  damage_class: {
-    name: string;
-    url: string;
-  };
-  move: {
-    name: string;
-    url: string;
-  };
-}
-
-interface Increase {
-  damage_class: {
-    name: string;
-    url: string;
-  };
-  move: {
-    name: string;
-    url: string;
-  };
-}
 
 @Component({
   selector: 'app-prueba',
@@ -61,12 +27,12 @@ interface Increase {
 })
 export class PruebaComponent implements OnInit {
   data: Data | null = null;
-  pokemons: any[] | null = [];
+  pokemons: Partial<Pokemon>[] | null = [];
   moves: any[] | null = [];
-  
+
   constructor(private pokemonService: PokemonService, private gameService: GameService) { }
- 
-  
+
+
   async ngOnInit() {
     localStorage.getItem('offset') ? Number(localStorage.getItem('offset')) : localStorage.setItem('offset', '0');
     localStorage.getItem('limit') ? Number(localStorage.getItem('limit')) : localStorage.setItem('limit', '99');
@@ -75,14 +41,13 @@ export class PruebaComponent implements OnInit {
       return null;
     }
     this.moves = this.pokemons?.map(pokemon => pokemon.moves)
-    //console.log(this.moves)
     return
   }
 
   gameLogic() {
     this.gameService.player1 = "Javi";
   }
-  
+
   title: string = 'prueba';
   isAttackPressed = false;
   attackstats: Afecting_moves | null = null;
@@ -95,7 +60,7 @@ export class PruebaComponent implements OnInit {
   clicked_id: number | null = null;
   pokemon: any | null = null;
   pokemonDetail: string = "stats";
-  
+
 
   async clickCard(id: number) {
     this.clicked_id = id;
@@ -104,21 +69,17 @@ export class PruebaComponent implements OnInit {
   }
   clickCardBack(cliked?: boolean): void {
     !cliked ? this.isClicked = !this.isClicked : this.isClicked = cliked;
-    //console.log(this.isClicked)
   }
 
 
   async changeAttack(url: string, pokemon_id: number) {
     this.pokemon_id = pokemon_id;
     this.attackstats = await this.pokemonService.getPokemonsAttackstats(url)
-    //console.log(this.attackstats)
     if (!this.attackstats) {
       return null;
     }
     this.attacks_decrease = this.attackstats.decrease;
     this.attacks_increase = this.attackstats.increase;
-    //console.log(this.attacks_decrease)
-    //console.log(this.attacks_increase)
     this.isAttackPressed = !this.isAttackPressed;
     return
   }
@@ -127,7 +88,6 @@ export class PruebaComponent implements OnInit {
   }
 
   manejarOffset(nuevoOffset: number) {
-    //console.log('Nuevo offset:', nuevoOffset);
     this.offset = nuevoOffset;
     this.ngOnInit();
   }

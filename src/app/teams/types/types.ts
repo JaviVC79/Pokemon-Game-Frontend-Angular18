@@ -4,3 +4,5 @@ export type SpecialPoints = {
     specialAttackPoints: number;
     specialDefensePoints: number;
   };
+
+  

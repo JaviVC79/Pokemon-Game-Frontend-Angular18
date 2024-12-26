@@ -4,20 +4,20 @@
         Attack with: {{ pokemon!.name.toUpperCase() }}
     </button>
 
-    @if(specialAttackPoints! < 10){ <p class="rounded-lg p-2 bg-red-500 mb-10 ml-4">
-        You have: {{specialAttackPoints}} special attack points</p>
-    } @else {
-        <button mat-fab extended class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10 ml-4"
-        [class.bg-red-300]="!isAttacking" [class.bg-red-400]="isAttacking" [disabled]="isAttacking" (click)="SpecialAttack()">
-        Special attack with: {{ pokemon!.name.toUpperCase() }} 
-        </button>
-        <button mat-fab extended class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10 ml-4"
-        [class.bg-red-300]="!isAttacking" [class.bg-red-400]="isAttacking" [disabled]="isAttacking" (click)="attackAllYourEnemies()">
-        Attack all your enemies at once with: {{ pokemon!.name.toUpperCase() }} 
-        </button>
+    <p class="rounded-lg p-2 bg-red-500 mb-10 ml-4">
+        You have: {{specialAttackPoints}} special attack points
+    </p>
+    @if(specialAttackPoints! >= 10) { <button mat-fab extended
+        class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10 ml-4" [class.bg-red-300]="!isAttacking"
+        [class.bg-red-400]="isAttacking" [disabled]="isAttacking" (click)="SpecialAttack()">
+        Special attack with: {{ pokemon!.name.toUpperCase() }}
+    </button>
+    <button mat-fab extended class="rounded-lg p-2 bg-red-300 hover:bg-red-400 hover:scale-95 mb-10 ml-4"
+        [class.bg-red-300]="!isAttacking" [class.bg-red-400]="isAttacking" [disabled]="isAttacking"
+        (click)="attackAllYourEnemies()">
+        Attack all your enemies at once with: {{ pokemon!.name.toUpperCase() }}
+    </button>
     }
-
-
 </div>
 
 @if(attackResponse != null && attackResponse === "Your opponent is not connected"){

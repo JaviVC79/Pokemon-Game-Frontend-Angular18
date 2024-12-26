@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AttackButtonComponent } from "../attack-button/attack-button.component";
 import { TeamService } from '../../services/team.service';
 import { GameBattleService } from '../../services/game-battle.service';
-import { Game } from '../../services/game-battle.service';
+import { Game } from '../../services/interfaces-and-types/game-battle';
 import { DefenseButtonComponent } from '../defense-button/defense-button.component';
 
 @Component({

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Data } from '../prueba/prueba.component';
+import { Data, Pokemon } from '../prueba/interfaces/prueba';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
+
 
 @Injectable({
     providedIn: 'root',
@@ -33,19 +34,17 @@ export class PokemonService {
     }
 
     async fetchPokemonImage(urls: any[]) {
-        const pokemons: string[] = [];
-        let validatedPokemons: string[] = [];
+        const pokemons: Partial<Pokemon>[] = [];
+        let validatedPokemons: Partial<Pokemon>[] = [];
         if (!urls || urls.length === 0) {
             return null;
         }
-        //console.log('url', urls)
         try {
             await Promise.all(urls.map(async (url) => {
                 const response = await lastValueFrom(this.http.get<any>(url.url));
                 pokemons.push(response)//.sprites.other.home.front_shiny);
-                validatedPokemons = pokemons.filter((element:any) => element != null)
+                validatedPokemons = pokemons.filter((element: any) => element != null)
             }))
-            //console.log('pokemons', validatedPokemons)
             return validatedPokemons;
         } catch (error) {
             console.log(error)
@@ -53,13 +52,12 @@ export class PokemonService {
         }
     }
 
-    async getPokemons(offset?: number, limit?: number) {
+    async getPokemons(offset?: number, limit?: number): Promise<Partial<Pokemon>[] | null> {
         const urls = await this.fetchData(offset, limit);
         if (!urls) {
             return null;
         }
-        const pokemons = await this.fetchPokemonImage(urls);
-        //console.log(pokemons)
+        const pokemons: Partial<Pokemon>[] | null = await this.fetchPokemonImage(urls);
         return pokemons;
     }
     async getPokemonsAttackstats(url: string) {
@@ -67,7 +65,6 @@ export class PokemonService {
         if (!attacks) {
             return null;
         }
-        //console.log(attacks)
         return attacks.affecting_moves;
     }
     async getPokemon(clicked_id: number) {
@@ -75,9 +72,7 @@ export class PokemonService {
         if (!results) {
             return null;
         }
-        //console.log(results)
         return results;
-        //return results.results;
     }
 
     async getAttacksEffects(attackUrl: string) {
@@ -85,9 +80,8 @@ export class PokemonService {
         if (!results) {
             return null;
         }
-        //console.log(results);
         return results;
-      }
+    }
 
 }
 

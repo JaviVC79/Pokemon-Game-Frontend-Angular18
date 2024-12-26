@@ -8,8 +8,9 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
 import { CloudinaryService } from '../../services/cloudinary.service';
-import { TeamsResponse, Pokemon, Team } from '../../utils/types/pokemonType';
+import { TeamsResponse, Pokemon, Team, TeamResponse } from '../../utils/types/pokemonType';
 import { SpecialPoints } from '../types/types';
+import { setTimeout } from 'core-js';
 
 
 @Component({
@@ -49,32 +50,34 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
       if (this.attackResponse === "Your opponent is not connected") { this.isAttacking = false; return; }
       if (this.attackResponse.message === "It's not your turn") { this.isAttacking = false; this.turn = false; return; }
       if (this.attackResponse.message === "You have been defeated last opponent pokemon, you have win the game" || this.attackResponse.message === "Your last pokemon has been defeated, you have lost the game") {
-        this.teams = await this.gameService.getTeams();
-        console.log(this.teams)
-        this.teamService.setTeams(this.teams)
-        this.webSocketService.disconnect();
-        this.cookieService.delete("room")
-        this.isAttacking = false;
+        await this.setDefeatedTeam();
       }
       if (!(this.attackResponse != null && this.attackResponse.message === "Your opponent is not connected")) {
         await this.updatePokemons(message);
-        if (this.attackMessage !== "Your attack is not effective.") {
-          const specialPoints: SpecialPoints = this.attackResponse.specialPointsPlayer;
-          this.teamService.setSpecialAttackPoints(specialPoints.specialAttackPoints);
-          console.log(this.specialAttackPoints)
-        }
         return;
       }
     });
     this.webSocketService.onAttackAllYourEnemies().pipe(takeUntil(this.destroy$)).subscribe(async (message: any) => {
       this.attackResponse = message.message;
+      if (this.attackResponse === "Your opponent is not connected") { this.isAttacking = false; return; }
+      if (this.attackResponse.message === "It's not your turn") { this.isAttacking = false; this.turn = false; return; }
       await this.updatePokemons(message);
-      if(!this.pokemons || this.pokemons.length === 0){
-        this.teamService.setTeams(this.teams)
-        this.webSocketService.disconnect();
-        this.cookieService.delete("room")
+      if (this.attackResponse.message === "You have been defeated last opponent pokemon, you have win the game" || this.attackResponse.message === "Your last pokemon has been defeated, you have lost the game") {
+        await this.setDefeatedTeam();
       }
     })
+    this.webSocketService.onSpecialAttack().pipe(takeUntil(this.destroy$)).subscribe(async (message: any) => {
+      this.attackResponse = message.message;
+      if (this.attackResponse === "Your opponent is not connected") { this.isAttacking = false; return; }
+      if (this.attackResponse.message === "It's not your turn") { this.isAttacking = false; this.turn = false; return; }
+      if (this.attackResponse.message === "You have been defeated last opponent pokemon, you have win the game" || this.attackResponse.message === "Your last pokemon has been defeated, you have lost the game") {
+        await this.setDefeatedTeam();
+      }
+      if (!(this.attackResponse != null && this.attackResponse.message === "Your opponent is not connected")) {
+        await this.updatePokemons(message);
+        return;
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -90,9 +93,23 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
   turn?: boolean;
   attackMessage?: string;
   pokemonAttackName?: string;
-  teams?: TeamsResponse | null;
+  teams?: TeamResponse[] | null;
   isAttacking: boolean = false;
   specialAttackPoints?: number;
+
+
+  private async setDefeatedTeam() {
+    const teamResponse: TeamsResponse | null = await this.gameService.getTeams();
+    this.teams = teamResponse?.teams;
+    this.teamService.setTeams(this.teams);
+    this.webSocketService.disconnect();
+    this.cookieService.delete("room");
+    this.isAttacking = false;
+    setTimeout(() => {
+      window.location.reload();
+    }, 1500)
+
+  }
 
   sendMessage() {
     this.webSocketService.sendMessage("a ver si funciona");
@@ -114,8 +131,13 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
     });
   }
 
-  getVideo(publicId: string): string {
-    return this.cloudinaryService.getVideoUrl(publicId);
+  async getVideo(publicId: string): Promise<string> {
+    try {
+      return await this.cloudinaryService.getVideoUrl(publicId);
+    } catch (e) {
+      console.log("error", e)
+      return '/squirtle.mp4';
+    }
   }
 
   attackAllYourEnemies() {
@@ -125,7 +147,8 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
   }
 
   SpecialAttack() {
-    throw new Error('Method not implemented.');
+    this.isAttacking = true;
+    this.webSocketService.specialAttack(this.pokemon);
   }
 
   async updatePokemons(message: any) {
@@ -135,7 +158,7 @@ export class AttackButtonComponent implements OnInit, OnDestroy {
     this.turn = true;
     this.attackMessage = this.attackResponse.message;
     const pokemonAttackName = message.pokemon.name
-    this.pokemonAttackName = this.getVideo(`PokemonGame/${pokemonAttackName!}`);
+    this.pokemonAttackName = await this.getVideo(`PokemonGame/${pokemonAttackName!}`);
     this.openPokemonAttackPopup();
     this.isAttacking = false;
   }

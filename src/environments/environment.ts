@@ -1,6 +1,6 @@
 //import {API_URL} from "../../env"
 
 export const environment = {
-    apiUrl: process.env.API_URL,
+    apiUrl: "https://apipokemongamenestjs.onrender.com/pokemon-api",
   };
   

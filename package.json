@@ -27,7 +27,7 @@
     "@videogular/ngx-videogular": "^10.0.1",
     "atropos": "^2.0.2",
     "ngx-cookie-service": "^18.0.0",
-    "ngx-socket-io": "^4.8.0",
+    "ngx-socket-io": "4.7.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

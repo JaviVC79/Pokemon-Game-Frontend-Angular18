@@ -1,0 +1,34 @@
+<section class="game-intro">
+    <h2>Welcome to the Pokemon Card Battle!</h2>
+    <p>Test your skills against trainers from around the world</p>
+</section>
+
+<section class="game-modes">
+    <div class="mode-card">
+        <h3>Single Player</h3>
+        <a *ngIf="!isLogin" href="/login">
+            <button class="game-button">Play Now</button>
+        </a>
+        <a *ngIf="isLogin" href="/teams">
+            <button class="game-button">Play Now</button>
+        </a>
+    </div>
+</section>
+
+<section class="featured-cards">
+    <h2>Featured Cards</h2>
+    <div class="card-showcase">
+        <div class="pokemon-card">
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/149.png" alt="Dragonite">
+            <h4>Dragonite</h4>
+        </div>
+        <div class="pokemon-card">
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png" alt="Mewtwo">
+            <h4>Mewtwo</h4>
+        </div>
+        <div class="pokemon-card">
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/384.png" alt="Rayquaza">
+            <h4>Rayquaza</h4>
+        </div>
+    </div>
+</section>

@@ -22,6 +22,7 @@ const apiUrl = environment.apiUrl;
 })
 
 export class LoginPlayerFormComponent implements OnInit {
+
   constructor(private http: HttpClient,
     private cookieService: CookieService,
     private authService: AuthService,
@@ -103,4 +104,26 @@ export class LoginPlayerFormComponent implements OnInit {
       return error
     }
   }
+
+  async onForgetPassword() {
+    if (this.email === "") {
+      this.openNoDataPopup();
+      return;
+    }
+    const email = this.email
+
+
+    this.newPassword(email);
+  }
+
+  async newPassword(email: string) {
+    const body = { email: email }
+    try {
+      const response = await lastValueFrom(this.http.post<any>(`${apiUrl}/newPassword`, body, { withCredentials: true }));
+      return response;
+    } catch (error) {
+      return error
+    }
+  }
+
 }

@@ -1,0 +1,133 @@
+:root {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    color-scheme: light dark;
+    background-color: #1a1a2e;
+    color: #ffffff;
+  }
+  
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+  }
+  
+  #app {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  .game-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+  
+  .header-pokemon {
+    width: 100px;
+    height: 100px;
+  }
+  
+  h1 {
+    font-size: 3.2em;
+    text-align: center;
+    background: linear-gradient(45deg, #ff0000, #ffde00);
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+  }
+  
+  .game-intro {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .game-modes {
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+  
+  .mode-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    flex: 1;
+    transition: transform 0.3s ease;
+  }
+  
+  .mode-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .game-button {
+    background: linear-gradient(45deg, #ff0000, #ffde00);
+    border: none;
+    padding: 0.8em 1.5em;
+    border-radius: 0.5rem;
+    color: #1a1a2e;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+  }
+  
+  .game-button:hover {
+    opacity: 0.9;
+  }
+  
+  .featured-cards {
+    text-align: center;
+    margin-top: 3rem;
+  }
+  
+  .card-showcase {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .pokemon-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    border-radius: 1rem;
+    transition: transform 0.3s ease;
+    min-width: 30%;
+  }
+  
+  .pokemon-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .pokemon-card img {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .game-footer {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  @media (max-width: 768px) {
+    .game-modes {
+      flex-direction: column;
+    }
+    
+    .card-showcase {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .game-header {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }

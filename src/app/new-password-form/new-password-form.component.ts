@@ -44,7 +44,7 @@ export class NewPasswordFormComponent {
       password: this.password,
     };
     this.users.push(newPlayer);
-    this.singUp(newPlayer);
+    this.newPassword(newPlayer);
 
   }
 
@@ -93,12 +93,12 @@ export class NewPasswordFormComponent {
     });
   }
 
-  async singUp(newPlayer: any) {
+  async newPassword(newPlayer: any) {
     const body = newPlayer;
     try {
       const response = await lastValueFrom(this.http.post<any>(`${this.apiUrl}/getNewPassword`, body, { withCredentials: true }));
       if (!response) return null;
-      this.router.navigateByUrl('/newPassword')
+      this.router.navigateByUrl('/login')
       return response;
 
     } catch (error) {

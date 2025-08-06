@@ -1,48 +1,70 @@
-<main class="main">
-  <div class="flex justify-between bg-red-300 rounded-lg p-5 w-full">
-    <nav class="flex justify-between p-4 w-full mr-4">
-      <div>
-        <a mat-fab extended routerLink="/">
-          <mat-icon>home</mat-icon>
-          Home
-        </a>
-      </div>
-      <div>
-        <a mat-fab extended routerLink="/pokemons">
-          <mat-icon>pie_chart</mat-icon>
-          Pokemons
-        </a>
-      </div>
-      <div *ngIf="isLogin">
-        <a *ngIf="isLogin" mat-fab extended routerLink="/teams">
-          <mat-icon *ngIf="isLogin">pie_chart</mat-icon>
-          Player Teams
-        </a>
-      </div>
-      <div *ngIf="!isLogin">
-        <a *ngIf="!isLogin" mat-fab extended routerLink="/createPlayerForm">
-          <mat-icon>sports_esports</mat-icon>
-          NewPlayer
-        </a>
-      </div>
-      <div *ngIf="!isLogin">
-        <a *ngIf="!isLogin" mat-fab extended routerLink="/login">
-          <mat-icon>login</mat-icon>
-          Login
-        </a>
-      </div>
-      <div *ngIf="isLogin">
-        <button *ngIf="isLogin" mat-fab extended (click)="logOut()">
-          <mat-icon>logout</mat-icon>
-          LogOut
-        </button>
-      </div>
+<mat-sidenav-container class="h-screen">
+  <!-- Sidebar (solo visible en móvil) -->
+  <mat-sidenav #sidenav mode="over" class="w-64 p-4" [fixedInViewport]="true">
+    <nav class="flex flex-col gap-4">
+      <a mat-button routerLink="/" (click)="sidenav.close()">
+        <mat-icon>home</mat-icon> Home
+      </a>
+      <a mat-button routerLink="/pokemons" (click)="sidenav.close()">
+        <mat-icon>pie_chart</mat-icon> Pokemons
+      </a>
+      <a *ngIf="isLogin" mat-button routerLink="/teams" (click)="sidenav.close()">
+        <mat-icon>groups</mat-icon> Player Teams
+      </a>
+      <a *ngIf="!isLogin" mat-button routerLink="/createPlayerForm" (click)="sidenav.close()">
+        <mat-icon>sports_esports</mat-icon> New Player
+      </a>
+      <a *ngIf="!isLogin" mat-button routerLink="/login" (click)="sidenav.close()">
+        <mat-icon>login</mat-icon> Login
+      </a>
+      <button *ngIf="isLogin" mat-button (click)="logOut(); sidenav.close()">
+        <mat-icon>logout</mat-icon> LogOut
+      </button>
     </nav>
-    <h1>Pokemon App</h1>
-  </div>
-</main>
+  </mat-sidenav>
 
-<router-outlet />
-<footer class="game-footer">
-  <p>© 2024 Pokemon Card Game. All rights reserved.</p>
-</footer>
+  <!-- Contenido principal -->
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" class="flex justify-between">
+      <!-- Menú hamburguesa solo visible en móvil -->
+      <button mat-icon-button (click)="sidenav.toggle()" class="hamburger-button">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <!-- Título -->
+      <span class="text-lg font-semibold">Pokemon App</span>
+
+      <!-- Navbar horizontal (visible solo en pantallas grandes) -->
+      <nav class="hidden md:flex gap-4">
+        <a mat-button routerLink="/">
+          <mat-icon>home</mat-icon> Home
+        </a>
+        <a mat-button routerLink="/pokemons">
+          <mat-icon>pie_chart</mat-icon> Pokemons
+        </a>
+        <a *ngIf="isLogin" mat-button routerLink="/teams">
+          <mat-icon>groups</mat-icon> Player Teams
+        </a>
+        <a *ngIf="!isLogin" mat-button routerLink="/createPlayerForm">
+          <mat-icon>sports_esports</mat-icon> New Player
+        </a>
+        <a *ngIf="!isLogin" mat-button routerLink="/login">
+          <mat-icon>login</mat-icon> Login
+        </a>
+        <button *ngIf="isLogin" mat-button (click)="logOut()">
+          <mat-icon>logout</mat-icon> LogOut
+        </button>
+      </nav>
+    </mat-toolbar>
+
+    <!-- Router outlet y contenido de la página -->
+    <main class="p-6">
+      <router-outlet></router-outlet>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center text-sm text-gray-500 py-4">
+      <p>© 2024 Pokemon Card Game. All rights reserved.</p>
+    </footer>
+  </mat-sidenav-content>
+</mat-sidenav-container>

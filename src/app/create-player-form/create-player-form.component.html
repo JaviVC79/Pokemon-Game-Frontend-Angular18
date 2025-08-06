@@ -1,20 +1,39 @@
-<div class="m-10 p-4 border rounded shadow-md justify-items-center">
-  <form (ngSubmit)="onSubmit()" class="flex flex-col gap-2 min-w-80">
-    <label for="email" class="text-gray-700 font-medium">Email:</label>
-    <input type="email" id="email" name="email" [(ngModel)]="email" autocomplete="email"
-      class="border rounded p-2 focus:outline-none focus:ring-2 focus:ring-red-300">
-      <div *ngIf="!validEmail" class="text-red-600">Valid email required.</div>
-    <label for="nickName" class="text-gray-700 font-medium">NickName:</label>
-    <input type="text" id="nickName" name="nickName" [(ngModel)]="nickName" autocomplete="username"
-      class="border rounded p-2 focus:outline-none focus:ring-2 focus:ring-red-300">
-      <div *ngIf="!validNickName" class="text-red-600">At least 4 characters required.</div>
-    <label for="password" class="text-gray-700 font-medium">Password:</label>
-    <input type="password" id="password" name="password" [(ngModel)]="password" autocomplete="current-password"
-      class="border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-      <div *ngIf="!validPassword" class="text-red-600">Password must be between 9 and 18 characters long, and include at least one letter, one number, and one special character.</div>
-    <button type="submit" class="
-    bg-red-400 hover:bg-red-500 hover:text-white active:scale-95 font-bold py-2 px-4 rounded">
-      Create Player
-    </button>
-  </form>
+<div class="mx-auto max-w-md">
+  <div class="m-4 sm:m-10 p-4 sm:p-6 border rounded shadow-md max-w-md mx-auto w-full">
+    <form (ngSubmit)="onSubmit()" class="flex flex-col gap-4 w-full">
+
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-gray-700 font-medium mb-1">Email:</label>
+        <input type="email" id="email" name="email" [(ngModel)]="email" autocomplete="email"
+          class="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-red-300" />
+        <div *ngIf="!validEmail" class="text-red-600 text-sm mt-1">Valid email required.</div>
+      </div>
+
+      <!-- Nickname -->
+      <div>
+        <label for="nickName" class="block text-gray-700 font-medium mb-1">NickName:</label>
+        <input type="text" id="nickName" name="nickName" [(ngModel)]="nickName" autocomplete="username"
+          class="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-red-300" />
+        <div *ngIf="!validNickName" class="text-red-600 text-sm mt-1">At least 4 characters required.</div>
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label for="password" class="block text-gray-700 font-medium mb-1">Password:</label>
+        <input type="password" id="password" name="password" [(ngModel)]="password" autocomplete="current-password"
+          class="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <div *ngIf="!validPassword" class="text-red-600 text-sm mt-1">
+          Password must be 9–18 chars, include 1 letter, 1 number, 1 special character.
+        </div>
+      </div>
+
+      <!-- Botón -->
+      <button type="submit"
+        class="w-full bg-red-400 hover:bg-red-500 hover:text-white active:scale-95 font-bold py-2 px-4 rounded">
+        Create Player
+      </button>
+
+    </form>
+  </div>
 </div>

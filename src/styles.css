@@ -18,5 +18,9 @@ body { margin: 50px; font-family: Roboto, "Helvetica Neue", sans-serif; align-it
     transform-style: preserve-3d;
   }
 }
-
+@media (min-width: 768px) {
+  .hamburger-button {
+    display: none !important;
+  }
+}
   

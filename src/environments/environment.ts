@@ -2,6 +2,6 @@
 
 export const environment = {
     //apiUrl: 'https://apipokemongamenestjs.onrender.com/pokemon-api',
-    apiUrl: 'https://pokemon-backend.javivc.site',
+    apiUrl: 'https://pokemon-backend.javivc.site/pokemon-api',
   };
   
